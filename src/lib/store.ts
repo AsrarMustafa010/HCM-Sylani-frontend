@@ -50,10 +50,14 @@ export interface HCMState {
 const STORAGE_KEY = "hcm_lite_live_store_v1";
 const TOKEN_KEY = "hcm_lite_token_v1";
 
-export const API_BASE_URL =
+const rawApiUrl =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   process.env.NEXT_PUBLIC_API_URL ||
   "http://localhost:5000/api";
+
+export const API_BASE_URL = rawApiUrl.endsWith("/api")
+  ? rawApiUrl
+  : `${rawApiUrl.replace(/\/+$/, "")}/api`;
 
 export function getAuthToken(): string | null {
   if (typeof window === "undefined") return null;
