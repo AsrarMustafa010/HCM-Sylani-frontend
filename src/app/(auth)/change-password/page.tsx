@@ -50,7 +50,7 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-white dark:bg-slate-950">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-lg mb-3">
@@ -109,7 +109,7 @@ export default function ChangePasswordPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-10 font-semibold bg-indigo-600 hover:bg-indigo-700"
+                className="w-full h-10 font-semibold bg-slate-900 hover:bg-slate-800 text-white shadow-xs"
               >
                 {loading ? "Updating..." : "Update Password & Continue"}
                 <ArrowRight className="h-4 w-4 ml-1.5" />

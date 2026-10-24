@@ -157,7 +157,7 @@ export default function OrganizationPage() {
           onClick={() => setActiveTab("settings")}
           className={`px-4 py-2.5 font-medium border-b-2 transition ${
             activeTab === "settings"
-              ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold"
+              ? "border-slate-900 text-slate-900 dark:border-white dark:text-white font-bold"
               : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
         >
@@ -167,7 +167,7 @@ export default function OrganizationPage() {
           onClick={() => setActiveTab("hr_logins")}
           className={`px-4 py-2.5 font-medium border-b-2 transition ${
             activeTab === "hr_logins"
-              ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold"
+              ? "border-slate-900 text-slate-900 dark:border-white dark:text-white font-bold"
               : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
         >
@@ -177,7 +177,7 @@ export default function OrganizationPage() {
           onClick={() => setActiveTab("departments")}
           className={`px-4 py-2.5 font-medium border-b-2 transition ${
             activeTab === "departments"
-              ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold"
+              ? "border-slate-900 text-slate-900 dark:border-white dark:text-white font-bold"
               : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
         >
@@ -187,7 +187,7 @@ export default function OrganizationPage() {
           onClick={() => setActiveTab("leave_types")}
           className={`px-4 py-2.5 font-medium border-b-2 transition ${
             activeTab === "leave_types"
-              ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold"
+              ? "border-slate-900 text-slate-900 dark:border-white dark:text-white font-bold"
               : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
         >
@@ -197,7 +197,7 @@ export default function OrganizationPage() {
           onClick={() => setActiveTab("holidays")}
           className={`px-4 py-2.5 font-medium border-b-2 transition ${
             activeTab === "holidays"
-              ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold"
+              ? "border-slate-900 text-slate-900 dark:border-white dark:text-white font-bold"
               : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
         >
@@ -411,7 +411,7 @@ export default function OrganizationPage() {
                       <Badge variant="secondary">{dept.code}</Badge>
                     </div>
                     <p className="text-xs text-slate-500 mt-1">{dept.description || "—"}</p>
-                    <div className="mt-3 text-xs text-indigo-600 dark:text-indigo-400 font-medium">
+                    <div className="mt-3 text-xs text-slate-900 dark:text-slate-100 font-medium">
                       {count} Employees Assigned
                     </div>
                   </div>
@@ -444,7 +444,7 @@ export default function OrganizationPage() {
                     </span>
                     <Badge variant="outline">{type.code}</Badge>
                   </div>
-                  <div className="text-2xl font-bold mt-2 text-indigo-600 dark:text-indigo-400">
+                  <div className="text-2xl font-bold mt-2 text-slate-900 dark:text-slate-100">
                     {type.yearly_quota === 0 ? "Unlimited" : `${type.yearly_quota} Days`}
                   </div>
                   <div className="text-xs text-slate-400 mt-1">
@@ -482,7 +482,7 @@ export default function OrganizationPage() {
                   className="flex items-center justify-between p-3 rounded-lg border border-slate-200 dark:border-slate-800 text-xs"
                 >
                   <div className="font-medium text-slate-900 dark:text-white flex items-center space-x-2">
-                    <Calendar className="h-4 w-4 text-indigo-500" />
+                    <Calendar className="h-4 w-4 text-slate-700 dark:text-slate-300" />
                     <span>{h.name}</span>
                   </div>
                   <Badge variant="secondary">{h.date}</Badge>

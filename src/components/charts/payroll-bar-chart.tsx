@@ -70,7 +70,7 @@ export function PayrollBarChart({ data = defaultData }: PayrollBarChartProps) {
           <Bar
             dataKey="gross"
             name="Gross Payroll"
-            fill="#4f46e5"
+            fill="#0f172a"
             radius={[6, 6, 0, 0]}
             maxBarSize={30}
           />

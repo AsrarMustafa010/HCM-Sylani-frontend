@@ -221,7 +221,7 @@ export default function EmployeesPage() {
                 setRegSuccess(null);
                 setIsRegisterOpen(true);
               }}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs"
+              className="bg-slate-900 hover:bg-slate-800 text-white text-xs"
             >
               <UserPlus className="h-3.5 w-3.5 mr-1.5" />
               Register Employee
@@ -291,7 +291,7 @@ export default function EmployeesPage() {
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {filtered.map((emp) => (
                   <tr key={emp.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
-                    <td className="p-3.5 font-mono font-semibold text-indigo-600 dark:text-indigo-400">
+                    <td className="p-3.5 font-mono font-semibold text-slate-900 dark:text-slate-100">
                       {emp.employee_code}
                     </td>
                     <td className="p-3.5">
@@ -475,7 +475,7 @@ export default function EmployeesPage() {
             <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
               <label className="font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
                 <span>Basic Salary (PKR)</span>
-                <span className="text-indigo-600 font-mono text-[11px]">Rule: Gross = 1.5 × Basic</span>
+                <span className="text-slate-900 dark:text-slate-100 font-mono text-[11px]">Rule: Gross = 1.5 × Basic</span>
               </label>
               <Input
                 type="number"
@@ -500,7 +500,7 @@ export default function EmployeesPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-10 font-semibold bg-indigo-600 hover:bg-indigo-700">
+            <Button type="submit" className="w-full h-10 font-semibold bg-slate-900 hover:bg-slate-800 text-white">
               Register & Generate Login
             </Button>
           </form>
@@ -556,7 +556,7 @@ export default function EmployeesPage() {
             <Button
               size="sm"
               onClick={handleCommitValidCsvRows}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="bg-slate-900 hover:bg-slate-800 text-white"
             >
               Commit Valid Rows to DB
             </Button>

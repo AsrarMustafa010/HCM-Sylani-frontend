@@ -114,7 +114,7 @@ export default function AttendancePage() {
           )}
 
           <Link href="/attendance/checkin">
-            <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs">
+            <Button size="sm" className="bg-slate-900 hover:bg-slate-800 text-white text-xs">
               <Camera className="h-3.5 w-3.5 mr-1.5" />
               Check-In Console
             </Button>
@@ -128,7 +128,7 @@ export default function AttendancePage() {
           onClick={() => setActiveTab("board")}
           className={`px-4 py-2 font-medium border-b-2 transition ${
             activeTab === "board"
-              ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold"
+              ? "border-slate-900 text-slate-900 dark:border-white dark:text-white font-bold"
               : "border-transparent text-slate-500"
           }`}
         >
@@ -138,7 +138,7 @@ export default function AttendancePage() {
           onClick={() => setActiveTab("corrections")}
           className={`px-4 py-2 font-medium border-b-2 transition ${
             activeTab === "corrections"
-              ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold"
+              ? "border-slate-900 text-slate-900 dark:border-white dark:text-white font-bold"
               : "border-transparent text-slate-500"
           }`}
         >
@@ -216,7 +216,7 @@ export default function AttendancePage() {
                         <td className="p-3.5">
                           <span className="inline-flex items-center space-x-1 uppercase text-[10px] text-slate-400">
                             {rec.check_in_source === "camera" ? (
-                              <Camera className="h-3 w-3 text-indigo-500" />
+                              <Camera className="h-3 w-3 text-slate-700 dark:text-slate-300" />
                             ) : (
                               <Globe className="h-3 w-3 text-slate-400" />
                             )}

@@ -333,7 +333,7 @@ export default function CheckInConsolePage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2">
             <span>Biometric Face & GPS Attendance</span>
-            <Badge variant="default" className="text-[10px] bg-gradient-to-r from-indigo-600 to-purple-600">
+            <Badge variant="default" className="text-[10px] bg-slate-900 text-white border-none">
               Section 5 + Bonus (+10 Pts)
             </Badge>
           </h1>
@@ -348,7 +348,7 @@ export default function CheckInConsolePage() {
             onClick={() => setMode("camera")}
             className={`px-3 py-1.5 rounded-lg font-medium transition ${
               mode === "camera"
-                ? "bg-white dark:bg-slate-900 text-indigo-600 shadow-xs font-semibold"
+                ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-bold"
                 : "text-slate-600 dark:text-slate-400"
             }`}
           >
@@ -359,7 +359,7 @@ export default function CheckInConsolePage() {
             onClick={() => setMode("web")}
             className={`px-3 py-1.5 rounded-lg font-medium transition ${
               mode === "web"
-                ? "bg-white dark:bg-slate-900 text-indigo-600 shadow-xs font-semibold"
+                ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-bold"
                 : "text-slate-600 dark:text-slate-400"
             }`}
           >
@@ -405,7 +405,7 @@ export default function CheckInConsolePage() {
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm flex items-center space-x-2">
-                <Scan className="h-4 w-4 text-indigo-600" />
+                <Scan className="h-4 w-4 text-slate-900 dark:text-slate-100" />
                 <span>Live Facial Scanner</span>
               </CardTitle>
               <Badge
@@ -442,7 +442,7 @@ export default function CheckInConsolePage() {
                     ? "border-emerald-400 bg-emerald-500/10 shadow-[0_0_25px_rgba(52,211,153,0.35)] scanner-glow"
                     : detectedFacesCount > 1
                     ? "border-rose-500 bg-rose-500/15"
-                    : "border-indigo-400/70 border-dashed animate-pulse"
+                    : "border-slate-400/70 border-dashed animate-pulse"
                 }`}
               >
                 <span className="text-[9px] font-mono uppercase bg-black/70 text-white px-2 py-0.5 rounded-full">
@@ -476,7 +476,7 @@ export default function CheckInConsolePage() {
               {/* GPS Stamp Floating Bar */}
               <div className="absolute bottom-2 left-2 right-2 p-2 rounded-lg bg-black/80 backdrop-blur-md text-[10px] text-white flex items-center justify-between">
                 <div className="flex items-center space-x-1.5">
-                  <MapPin className="h-3.5 w-3.5 text-indigo-400" />
+                  <MapPin className="h-3.5 w-3.5 text-slate-400" />
                   <span>
                     Office Dist: <strong>{distanceToOffice !== null ? `${distanceToOffice}m` : "Checking..."}</strong> (Max {company?.office_radius_meters}m)
                   </span>
@@ -493,7 +493,7 @@ export default function CheckInConsolePage() {
             {/* Enrolled Face Match Status (Section 5 Extra Bonus) */}
             <div className="mt-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2.5">
-                <div className="h-9 w-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs overflow-hidden">
+                <div className="h-9 w-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs overflow-hidden">
                   {currentEmployee?.enrolled_face_photo ? (
                     <img
                       src={currentEmployee.enrolled_face_photo}
@@ -534,7 +534,7 @@ export default function CheckInConsolePage() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center space-x-2">
-                <Clock className="h-5 w-5 text-indigo-600" />
+                <Clock className="h-5 w-5 text-slate-900 dark:text-slate-100" />
                 <span>Attendance Verification Guard</span>
               </CardTitle>
               <CardDescription>
@@ -546,7 +546,7 @@ export default function CheckInConsolePage() {
               <div className="space-y-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
                 <div className="flex items-center justify-between">
                   <span className="flex items-center space-x-1.5 text-slate-700 dark:text-slate-300">
-                    <UserCheck className="h-3.5 w-3.5 text-indigo-500" />
+                    <UserCheck className="h-3.5 w-3.5 text-slate-700 dark:text-slate-300" />
                     <span>Exactly 1 Face in Frame</span>
                   </span>
                   <Badge variant={detectedFacesCount === 1 ? "success" : "destructive"}>
@@ -556,7 +556,7 @@ export default function CheckInConsolePage() {
 
                 <div className="flex items-center justify-between">
                   <span className="flex items-center space-x-1.5 text-slate-700 dark:text-slate-300">
-                    <Eye className="h-3.5 w-3.5 text-indigo-500" />
+                    <Eye className="h-3.5 w-3.5 text-slate-700 dark:text-slate-300" />
                     <span>Liveness Verification</span>
                   </span>
                   <Badge variant={livenessStage === "verified" ? "success" : "warning"}>
@@ -566,7 +566,7 @@ export default function CheckInConsolePage() {
 
                 <div className="flex items-center justify-between">
                   <span className="flex items-center space-x-1.5 text-slate-700 dark:text-slate-300">
-                    <MapPin className="h-3.5 w-3.5 text-indigo-500" />
+                    <MapPin className="h-3.5 w-3.5 text-slate-700 dark:text-slate-300" />
                     <span>GPS Accuracy &lt; 100m</span>
                   </span>
                   <Badge variant={isGpsAccuracyValid ? "success" : "destructive"}>
@@ -576,7 +576,7 @@ export default function CheckInConsolePage() {
 
                 <div className="flex items-center justify-between">
                   <span className="flex items-center space-x-1.5 text-slate-700 dark:text-slate-300">
-                    <MapPin className="h-3.5 w-3.5 text-indigo-500" />
+                    <MapPin className="h-3.5 w-3.5 text-slate-700 dark:text-slate-300" />
                     <span>Inside Office Radius (≤{company?.office_radius_meters}m)</span>
                   </span>
                   <Badge variant={isInsideRadius ? "success" : "destructive"}>
@@ -590,7 +590,7 @@ export default function CheckInConsolePage() {
                 <Button
                   onClick={() => handlePerformCheckIn()}
                   disabled={isSubmitting || !!myAttendanceToday?.check_in}
-                  className="h-12 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-md shadow-indigo-500/20"
+                  className="h-12 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs shadow-xs"
                 >
                   <CheckCircle className="h-4 w-4 mr-1.5" />
                   {myAttendanceToday?.check_in ? "Already Checked In" : "Verify & Check In"}
@@ -608,8 +608,8 @@ export default function CheckInConsolePage() {
               </div>
 
               {/* Judge Simulator for 5-minute Demo */}
-              <div className="p-3 rounded-xl border border-dashed border-indigo-200 dark:border-indigo-900 bg-indigo-50/30 dark:bg-indigo-950/20 text-xs">
-                <span className="text-[11px] font-semibold text-indigo-700 dark:text-indigo-400 flex items-center mb-2">
+              <div className="p-3 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-xs">
+                <span className="text-[11px] font-semibold text-slate-900 dark:text-slate-100 flex items-center mb-2">
                   <Sparkles className="h-3.5 w-3.5 mr-1 text-amber-500" />
                   Judge Quick Simulation (Section 3 & 4 Rules)
                 </span>

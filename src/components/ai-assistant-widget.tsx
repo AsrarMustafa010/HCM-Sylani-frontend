@@ -126,11 +126,11 @@ export function AIAssistantWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="flex items-center space-x-2 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95"
+          className="flex items-center space-x-2 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white shadow-xl border border-slate-700 transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95"
         >
-          <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 animate-pulse text-amber-300" />
+          <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 animate-pulse text-amber-400" />
           <span className="text-xs sm:text-sm font-semibold">AI Assistant</span>
-          <span className="hidden sm:inline-block text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/50 uppercase font-mono font-medium">
+          <span className="hidden sm:inline-block text-[10px] px-1.5 py-0.5 rounded bg-emerald-600 text-white uppercase font-mono font-medium">
             Live Tools
           </span>
         </button>
@@ -138,22 +138,22 @@ export function AIAssistantWidget() {
 
       {/* Slide-out / Pop-up Chat Window */}
       {isOpen && (
-        <div className="flex flex-col w-[calc(100vw-1.5rem)] max-w-[420px] h-[480px] sm:h-[550px] rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
+        <div className="flex flex-col w-[calc(100vw-1.5rem)] max-w-[420px] h-[480px] sm:h-[550px] rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 text-white">
+          <div className="flex items-center justify-between p-4 bg-slate-900 text-white border-b border-slate-800">
             <div className="flex items-center space-x-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 backdrop-blur-xs">
-                <Sparkles className="h-4 w-4 text-amber-300" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-800 border border-slate-700">
+                <Sparkles className="h-4 w-4 text-amber-400" />
               </div>
               <div>
                 <h3 className="text-sm font-semibold flex items-center space-x-1.5">
                   <span>HCM AI Assistant</span>
-                  <Badge variant="secondary" className="text-[9px] py-0 px-1 bg-white/20 text-white border-none">
+                  <Badge variant="secondary" className="text-[9px] py-0 px-1 bg-slate-800 text-slate-200 border border-slate-700">
                     M8 Module
                   </Badge>
                 </h3>
-                <p className="text-[11px] text-indigo-100">
-                  Role Scope: <span className="font-semibold uppercase">{currentUser?.role || "Guest"}</span>
+                <p className="text-[11px] text-slate-300">
+                  Role Scope: <span className="font-semibold uppercase text-emerald-400">{currentUser?.role || "Guest"}</span>
                 </p>
               </div>
             </div>
@@ -166,13 +166,13 @@ export function AIAssistantWidget() {
           </div>
 
           {/* Quick Prompts Bar */}
-          <div className="p-2 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 flex items-center space-x-1.5 overflow-x-auto text-xs no-scrollbar">
+          <div className="p-2 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 flex items-center space-x-1.5 overflow-x-auto text-xs no-scrollbar">
             <span className="text-[11px] font-semibold text-slate-400 pl-1 shrink-0">Try:</span>
             {quickPrompts.slice(0, 3).map((prompt, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSend(prompt)}
-                className="whitespace-nowrap px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 text-slate-700 dark:text-slate-300 text-[11px] transition shrink-0 cursor-pointer"
+                className="whitespace-nowrap px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-900 text-slate-700 dark:text-slate-300 text-[11px] transition shrink-0 cursor-pointer"
               >
                 {prompt.length > 28 ? prompt.slice(0, 28) + "..." : prompt}
               </button>
@@ -180,7 +180,7 @@ export function AIAssistantWidget() {
           </div>
 
           {/* Messages Feed */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs bg-white dark:bg-slate-900">
             {messages.map((m) => (
               <div
                 key={m.id}
@@ -189,15 +189,15 @@ export function AIAssistantWidget() {
                 <div
                   className={`max-w-[85%] rounded-2xl p-3 shadow-xs ${
                     m.role === "user"
-                      ? "bg-indigo-600 text-white rounded-br-xs"
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-xs border border-slate-200/60 dark:border-slate-700/60"
+                      ? "bg-slate-900 text-white rounded-br-xs"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-xs border border-slate-200/80 dark:border-slate-700/60"
                   }`}
                 >
                   <div className="whitespace-pre-line leading-relaxed">{m.content}</div>
 
                   {/* Tool called indicator */}
                   {m.tool_called && (
-                    <div className="mt-2 pt-2 border-t border-slate-200/50 dark:border-slate-700/50 flex items-center space-x-1 text-[10px] text-indigo-600 dark:text-indigo-400 font-mono font-medium">
+                    <div className="mt-2 pt-2 border-t border-slate-200/50 dark:border-slate-700/50 flex items-center space-x-1 text-[10px] text-slate-600 dark:text-slate-400 font-mono font-medium">
                       <Wrench className="h-3 w-3" />
                       <span>Tool: {m.tool_called}</span>
                     </div>
@@ -217,8 +217,8 @@ export function AIAssistantWidget() {
             ))}
 
             {loading && (
-              <div className="flex items-center space-x-2 text-slate-400 text-xs py-2">
-                <div className="h-2 w-2 rounded-full bg-indigo-500 animate-ping" />
+              <div className="flex items-center space-x-2 text-slate-500 text-xs py-2">
+                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
                 <span>AI is querying live database tools...</span>
               </div>
             )}

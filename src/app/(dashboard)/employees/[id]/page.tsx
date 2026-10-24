@@ -121,7 +121,7 @@ export default function Employee360Page() {
               <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)}>
                 Cancel
               </Button>
-              <Button size="sm" onClick={handleSave} className="bg-indigo-600 text-white">
+              <Button size="sm" onClick={handleSave} className="bg-slate-900 text-white">
                 <Check className="h-3.5 w-3.5 mr-1.5" />
                 Save Changes
               </Button>
@@ -221,7 +221,7 @@ export default function Employee360Page() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm flex items-center space-x-2">
-              <CreditCard className="h-4 w-4 text-indigo-500" />
+              <CreditCard className="h-4 w-4 text-slate-700 dark:text-slate-300" />
               <span>Salary Structure (M6)</span>
             </CardTitle>
             <CardDescription>Standard: Gross = 1.5 × Basic</CardDescription>
@@ -254,7 +254,7 @@ export default function Employee360Page() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm flex items-center space-x-2">
-              <Calendar className="h-4 w-4 text-indigo-500" />
+              <Calendar className="h-4 w-4 text-slate-700 dark:text-slate-300" />
               <span>Leave Balances (M5)</span>
             </CardTitle>
             <CardDescription>Yearly allowances & utilized days</CardDescription>
@@ -274,7 +274,7 @@ export default function Employee360Page() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">
+                  <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">
                     {bal.remaining === 999 ? "∞" : bal.remaining}
                   </span>
                   <div className="text-[9px] text-slate-400">Remaining</div>
@@ -288,7 +288,7 @@ export default function Employee360Page() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm flex items-center space-x-2">
-              <CalendarCheck className="h-4 w-4 text-indigo-500" />
+              <CalendarCheck className="h-4 w-4 text-slate-700 dark:text-slate-300" />
               <span>Recent Attendance (M4)</span>
             </CardTitle>
             <CardDescription>Latest daily check-in logs</CardDescription>

@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="light">
       <body
-        className="min-h-screen bg-white text-slate-900 flex flex-col font-sans antialiased selection:bg-indigo-600 selection:text-white"
+        className="min-h-screen bg-white text-slate-900 flex flex-col font-sans antialiased selection:bg-slate-900 selection:text-white"
       >
         <ThemeProvider defaultTheme="light">
           {children}

@@ -106,7 +106,7 @@ export default function PayrollPage() {
               size="sm"
               onClick={handleGenerateDraft}
               disabled={currentRun?.status === "finalized"}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs"
+              className="bg-slate-900 hover:bg-slate-800 text-white text-xs"
             >
               <Play className="h-3.5 w-3.5 mr-1" />
               {currentRun ? "Recalculate Draft" : "Run Payroll Draft"}

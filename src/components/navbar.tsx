@@ -61,7 +61,7 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-100 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-[0_1px_4px_rgba(0,0,0,0.015)]">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Left: Brand & Mobile Hamburger */}
         <div className="flex items-center space-x-2 sm:space-x-3">
@@ -81,7 +81,7 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
               <span className="font-extrabold text-slate-900 dark:text-white tracking-tight truncate max-w-[120px] sm:max-w-none">
                 {companyName}
               </span>
-              <span className="hidden sm:inline-block text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 font-bold border border-indigo-200/50 dark:border-indigo-800/50">
+              <span className="hidden sm:inline-block text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-bold border border-slate-300 dark:border-slate-700">
                 HCM Lite
               </span>
             </div>
@@ -141,7 +141,7 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Notifications
                   </h4>
-                  <span className="text-[11px] text-indigo-600 dark:text-indigo-400 cursor-pointer">
+                  <span className="text-[11px] text-slate-900 dark:text-slate-100 font-medium hover:underline cursor-pointer">
                     Mark all read
                   </span>
                 </div>

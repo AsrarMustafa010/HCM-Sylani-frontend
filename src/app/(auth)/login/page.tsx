@@ -63,7 +63,7 @@ export default function LoginPage() {
   const companyName = state.companySettings?.company_name || "HCM Lite";
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-indigo-50/50 via-white to-white dark:from-indigo-950/20 dark:via-slate-950 dark:to-slate-900">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-white dark:bg-slate-950">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <LogoIcon size={56} className="mx-auto mb-3" />
@@ -75,9 +75,9 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <Card className="border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl shadow-slate-200/50 dark:shadow-none rounded-2xl">
+        <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl rounded-2xl">
           <CardHeader className="pb-3 text-center">
-            <CardTitle className="text-base">Sign In to Your Workspace</CardTitle>
+            <CardTitle className="text-base font-bold">Sign In to Your Workspace</CardTitle>
             <CardDescription>
               Role and data-scope checked for every session.
             </CardDescription>
@@ -92,7 +92,7 @@ export default function LoginPage() {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                   Email Address
                 </label>
                 <Input
@@ -105,7 +105,7 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                   Password
                 </label>
                 <Input
@@ -120,7 +120,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-10 font-semibold bg-indigo-600 hover:bg-indigo-700"
+                className="w-full h-10 font-bold bg-slate-900 hover:bg-slate-800 text-white shadow-sm"
               >
                 {loading ? "Authenticating..." : "Sign In"}
                 <ArrowRight className="h-4 w-4 ml-1.5" />

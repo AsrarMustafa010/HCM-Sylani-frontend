@@ -51,7 +51,7 @@ export interface HCMState {
 }
 
 const defaultLeaveTypes: LeaveType[] = [
-  { id: "lt-annual", name: "Annual Leave", code: "AL", yearly_quota: 14, is_paid: true, color: "blue" },
+  { id: "lt-annual", name: "Annual Leave", code: "AL", yearly_quota: 14, is_paid: true, color: "slate" },
   { id: "lt-sick", name: "Sick Leave", code: "SL", yearly_quota: 8, is_paid: true, color: "rose" },
   { id: "lt-casual", name: "Casual Leave", code: "CL", yearly_quota: 10, is_paid: true, color: "amber" },
   { id: "lt-unpaid", name: "Unpaid Leave", code: "UL", yearly_quota: 0, is_paid: false, color: "slate" },

@@ -94,7 +94,7 @@ export default function SetupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-gradient-to-b from-indigo-50/50 via-white to-white dark:from-indigo-950/20 dark:via-slate-950 dark:to-slate-900">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-white dark:bg-slate-950">
       <div className="w-full max-w-2xl">
         {/* Brand Header */}
         <div className="text-center mb-8">
@@ -111,7 +111,7 @@ export default function SetupPage() {
             variant="outline"
             size="sm"
             onClick={handleFillDemoValues}
-            className="mt-3 text-xs border-indigo-300 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40"
+            className="mt-3 text-xs border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             <Sparkles className="h-3.5 w-3.5 mr-1 text-amber-500" />
             Quick Auto-Fill For Hackathon Demo
@@ -137,7 +137,7 @@ export default function SetupPage() {
               {/* Step 1: Company Profile */}
               <div className="space-y-3">
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center space-x-1.5">
-                  <Building2 className="h-3.5 w-3.5 text-indigo-500" />
+                  <Building2 className="h-3.5 w-3.5 text-slate-700 dark:text-slate-300" />
                   <span>Company Name</span>
                 </label>
                 <Input
@@ -152,7 +152,7 @@ export default function SetupPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100 dark:border-slate-800">
                 <div className="space-y-2">
                   <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center space-x-1.5">
-                    <Shield className="h-3.5 w-3.5 text-indigo-500" />
+                    <Shield className="h-3.5 w-3.5 text-slate-700 dark:text-slate-300" />
                     <span>Admin Email</span>
                   </label>
                   <Input
@@ -180,7 +180,7 @@ export default function SetupPage() {
               {/* Step 3: Office Hours & Rules */}
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center space-x-1.5 mb-3">
-                  <Clock className="h-3.5 w-3.5 text-indigo-500" />
+                  <Clock className="h-3.5 w-3.5 text-slate-700 dark:text-slate-300" />
                   <span>Office Timing & Attendance Rules</span>
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -217,7 +217,7 @@ export default function SetupPage() {
               {/* Step 4: Office GPS Coordinates */}
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center space-x-1.5 mb-2">
-                  <MapPin className="h-3.5 w-3.5 text-indigo-500" />
+                  <MapPin className="h-3.5 w-3.5 text-slate-700 dark:text-slate-300" />
                   <span>Office Geofence (Camera Attendance)</span>
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -253,7 +253,7 @@ export default function SetupPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-11 text-base font-semibold bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/20"
+                className="w-full h-11 text-base font-semibold bg-slate-900 hover:bg-slate-800 text-white shadow-xs"
               >
                 {loading ? "Initializing..." : "Launch Company Workspace"}
                 <ArrowRight className="h-4 w-4 ml-2" />

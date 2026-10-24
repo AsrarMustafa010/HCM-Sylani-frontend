@@ -94,7 +94,7 @@ export default function AnnouncementsPage() {
           <Button
             size="sm"
             onClick={() => setModalOpen(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs"
+            className="bg-slate-900 hover:bg-slate-800 text-white text-xs"
           >
             <Plus className="h-3.5 w-3.5 mr-1.5" />
             Post Announcement
@@ -183,7 +183,7 @@ export default function AnnouncementsPage() {
             />
           </div>
 
-          <Button type="submit" className="w-full h-10 bg-indigo-600 hover:bg-indigo-700">
+          <Button type="submit" className="w-full h-10 bg-slate-900 hover:bg-slate-800 text-white">
             Publish Announcement
           </Button>
         </form>

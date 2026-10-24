@@ -55,13 +55,13 @@ export default function DashboardLayout({
   if (!mounted || !currentUser) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-900 border-t-transparent dark:border-white" />
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#fafbfc] dark:bg-slate-950">
+    <div className="flex h-screen overflow-hidden bg-white dark:bg-slate-950">
       {/* Sidebar with mobile drawer support */}
       <Sidebar
         role={currentUser.role}

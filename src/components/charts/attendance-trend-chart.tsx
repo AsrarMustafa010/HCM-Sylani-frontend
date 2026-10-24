@@ -42,8 +42,8 @@ export function AttendanceTrendChart({ data = defaultData }: AttendanceTrendChar
         <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <defs>
             <linearGradient id="attendanceGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.4} />
-              <stop offset="95%" stopColor="#4f46e5" stopOpacity={0.0} />
+              <stop offset="5%" stopColor="#0f172a" stopOpacity={0.15} />
+              <stop offset="95%" stopColor="#0f172a" stopOpacity={0.0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" opacity={1} vertical={false} />
@@ -62,20 +62,20 @@ export function AttendanceTrendChart({ data = defaultData }: AttendanceTrendChar
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "rgba(15, 23, 42, 0.9)",
+              backgroundColor: "#0f172a",
               borderRadius: "0.75rem",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              border: "none",
               color: "#fff",
               fontSize: "12px",
-              boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3)",
+              boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)",
             }}
             formatter={(value: any) => [`${value}% Attendance Rate`, "Rate"]}
           />
           <Area
             type="monotone"
             dataKey="rate"
-            stroke="#4f46e5"
-            strokeWidth={3}
+            stroke="#0f172a"
+            strokeWidth={2.5}
             fillOpacity={1}
             fill="url(#attendanceGradient)"
           />

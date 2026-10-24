@@ -217,9 +217,9 @@ export default function DashboardPage() {
               size="sm"
               onClick={handleGenerateSummary}
               disabled={isSummarizing}
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-xs"
+              className="bg-slate-900 hover:bg-slate-800 text-white shadow-xs font-semibold"
             >
-              <Sparkles className="h-3.5 w-3.5 mr-1.5 text-amber-300" />
+              <Sparkles className="h-3.5 w-3.5 mr-1.5 text-amber-400" />
               {isSummarizing ? "Analyzing..." : "AI Summarize"}
             </Button>
           )}
@@ -228,14 +228,14 @@ export default function DashboardPage() {
 
       {/* AI Summary Card (Section 4 requirement) */}
       {summaryBullets && (
-        <Card className="border-indigo-200 dark:border-indigo-900/60 bg-gradient-to-br from-indigo-50/80 via-white to-purple-50/40 dark:from-indigo-950/40 dark:via-slate-900 dark:to-purple-950/20 shadow-sm animate-in fade-in">
+        <Card className="border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900 shadow-xs animate-in fade-in">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-semibold flex items-center space-x-2 text-indigo-900 dark:text-indigo-300">
-                <Sparkles className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+              <CardTitle className="text-sm font-bold flex items-center space-x-2 text-slate-900 dark:text-white">
+                <Sparkles className="h-4 w-4 text-amber-500" />
                 <span>AI Executive Summary (Current Filters)</span>
               </CardTitle>
-              <Badge variant="success" className="text-[10px] py-0">
+              <Badge variant="outline" className="text-[10px] py-0 border-slate-300 font-semibold">
                 Live Data Verified
               </Badge>
             </div>
@@ -244,7 +244,7 @@ export default function DashboardPage() {
             <ul className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
               {summaryBullets.map((bullet, idx) => (
                 <li key={idx} className="flex items-start space-x-2">
-                  <span className="text-indigo-500 font-bold">•</span>
+                  <span className="text-slate-900 dark:text-slate-100 font-bold">•</span>
                   <span>{bullet}</span>
                 </li>
               ))}
@@ -258,16 +258,16 @@ export default function DashboardPage() {
       {/* ================================================= */}
       {role === "admin" && (
         <div className="space-y-6">
-          {/* KPI Cards with card-hover-effect & gradients */}
+          {/* KPI Cards with card-hover-effect & crisp borders */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="card-hover-effect border-indigo-100 dark:border-indigo-950/70 shadow-xs relative overflow-hidden group">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-600" />
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-slate-900" />
               <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     Total Headcount
                   </span>
-                  <div className="h-9 w-9 rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                  <div className="h-9 w-9 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                     <Users className="h-4 w-4" />
                   </div>
                 </div>
@@ -275,7 +275,7 @@ export default function DashboardPage() {
                   {totalHeadcount}
                 </div>
                 <div className="flex items-center space-x-1.5 mt-2">
-                  <Badge variant="outline" className="text-[10px] text-indigo-600 border-indigo-200 bg-indigo-50/50 dark:bg-indigo-950/40 py-0">
+                  <Badge variant="outline" className="text-[10px] text-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 py-0 font-semibold">
                     {activeCount} Active
                   </Badge>
                   <span className="text-[10px] text-slate-400">· {probationCount} probation</span>
@@ -283,14 +283,14 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="card-hover-effect border-emerald-100 dark:border-emerald-950/70 shadow-xs relative overflow-hidden group">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500" />
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-emerald-600" />
               <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     Monthly Payroll
                   </span>
-                  <div className="h-9 w-9 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                  <div className="h-9 w-9 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                     <CreditCard className="h-4 w-4" />
                   </div>
                 </div>
@@ -298,7 +298,7 @@ export default function DashboardPage() {
                   {formatCurrency(totalMonthlyPayroll)}
                 </div>
                 <div className="flex items-center space-x-1.5 mt-2">
-                  <Badge variant="outline" className="text-[10px] text-emerald-600 border-emerald-200 bg-emerald-50/50 dark:bg-emerald-950/40 py-0">
+                  <Badge variant="outline" className="text-[10px] text-emerald-700 border-emerald-200 bg-emerald-50 py-0 font-semibold">
                     Tax Verified
                   </Badge>
                   <span className="text-[10px] text-slate-400">· Gross active cost</span>
@@ -306,14 +306,14 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="card-hover-effect border-purple-100 dark:border-purple-950/70 shadow-xs relative overflow-hidden group">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500" />
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-slate-700" />
               <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     Average Salary
                   </span>
-                  <div className="h-9 w-9 rounded-xl bg-purple-50 dark:bg-purple-950 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                  <div className="h-9 w-9 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                     <TrendingUp className="h-4 w-4" />
                   </div>
                 </div>
@@ -326,14 +326,14 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="card-hover-effect border-amber-100 dark:border-amber-950/70 shadow-xs relative overflow-hidden group">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500" />
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-amber-500" />
               <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     Turnout Today
                   </span>
-                  <div className="h-9 w-9 rounded-xl bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                  <div className="h-9 w-9 rounded-xl bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                     <CalendarCheck className="h-4 w-4" />
                   </div>
                 </div>
@@ -341,7 +341,7 @@ export default function DashboardPage() {
                   {presentCount + lateCount} <span className="text-base font-normal text-slate-400">/ {totalHeadcount}</span>
                 </div>
                 <div className="flex items-center space-x-1.5 mt-2">
-                  <Badge variant="outline" className="text-[10px] text-amber-600 border-amber-200 bg-amber-50/50 dark:bg-amber-950/40 py-0">
+                  <Badge variant="outline" className="text-[10px] text-amber-700 border-amber-200 bg-amber-50 py-0 font-semibold">
                     {lateCount} Late
                   </Badge>
                   <span className="text-[10px] text-slate-400">· {onLeaveToday} on leave</span>
@@ -352,19 +352,19 @@ export default function DashboardPage() {
 
           {/* Charts Row 1: Attendance Trends & Department Donut */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="card-hover-effect">
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-sm font-semibold flex items-center space-x-2">
-                      <TrendingUp className="h-4 w-4 text-indigo-600" />
+                    <CardTitle className="text-sm font-bold flex items-center space-x-2 text-slate-900 dark:text-white">
+                      <TrendingUp className="h-4 w-4 text-slate-900 dark:text-white" />
                       <span>7-Day Attendance Rate Trend</span>
                     </CardTitle>
                     <CardDescription className="text-xs">
                       Rolling workforce punctuality & presence curve
                     </CardDescription>
                   </div>
-                  <Badge variant="outline" className="text-[10px] text-indigo-600 border-indigo-200">
+                  <Badge variant="outline" className="text-[10px] text-slate-800 dark:text-slate-200 border-slate-300 font-semibold">
                     Live Telemetry
                   </Badge>
                 </div>
@@ -374,19 +374,19 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="card-hover-effect">
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-sm font-semibold flex items-center space-x-2">
-                      <Building className="h-4 w-4 text-purple-600" />
+                    <CardTitle className="text-sm font-bold flex items-center space-x-2 text-slate-900 dark:text-white">
+                      <Building className="h-4 w-4 text-slate-900 dark:text-white" />
                       <span>Staff Distribution by Department</span>
                     </CardTitle>
                     <CardDescription className="text-xs">
                       Live headcount allocation across active business units
                     </CardDescription>
                   </div>
-                  <Badge variant="outline" className="text-[10px] text-purple-600 border-purple-200">
+                  <Badge variant="outline" className="text-[10px] text-slate-800 dark:text-slate-200 border-slate-300 font-semibold">
                     {state.departments.length} Units
                   </Badge>
                 </div>
@@ -399,11 +399,11 @@ export default function DashboardPage() {
 
           {/* Charts Row 2: Monthly Payroll Bar Chart & Audit Feed */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="card-hover-effect">
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-sm font-semibold flex items-center space-x-2">
+                    <CardTitle className="text-sm font-bold flex items-center space-x-2 text-slate-900 dark:text-white">
                       <CreditCard className="h-4 w-4 text-emerald-600" />
                       <span>Gross Payroll vs Net Disbursed (M6)</span>
                     </CardTitle>
@@ -411,7 +411,7 @@ export default function DashboardPage() {
                       Monthly salary volume with tax withholding simulation
                     </CardDescription>
                   </div>
-                  <Badge variant="outline" className="text-[10px] text-emerald-600 border-emerald-200">
+                  <Badge variant="outline" className="text-[10px] text-emerald-700 border-emerald-300 bg-emerald-50 font-semibold">
                     PKR Slabs
                   </Badge>
                 </div>
@@ -421,17 +421,17 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="card-hover-effect">
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-sm font-semibold flex items-center space-x-2">
-                      <Shield className="h-4 w-4 text-indigo-600" />
+                    <CardTitle className="text-sm font-bold flex items-center space-x-2 text-slate-900 dark:text-white">
+                      <Shield className="h-4 w-4 text-slate-900 dark:text-white" />
                       <span>Recent Tamper-Proof Audit Feed (M9)</span>
                     </CardTitle>
                     <CardDescription className="text-xs">Immutable chronological transactions</CardDescription>
                   </div>
-                  <Link href="/audit-logs" className="text-xs text-indigo-600 hover:underline font-medium">
+                  <Link href="/audit-logs" className="text-xs text-slate-900 dark:text-white hover:underline font-bold">
                     View All →
                   </Link>
                 </div>
@@ -472,11 +472,11 @@ export default function DashboardPage() {
 
           {/* Section 8 Bonus: Attrition Risk Score & Absence Anomaly Flags */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-            <Card className="border-indigo-100 dark:border-indigo-900/60 shadow-xs">
+            <Card className="border-slate-200 dark:border-slate-800 shadow-xs">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4 text-indigo-600" />
+                    <TrendingUp className="h-4 w-4 text-slate-900 dark:text-slate-100" />
                     <span>Workforce Attrition Risk Index (Bonus)</span>
                   </CardTitle>
                   <Badge variant="outline" className="text-[10px]">
@@ -585,8 +585,8 @@ export default function DashboardPage() {
         <div className="space-y-6">
           {/* HR Key Metrics */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <Card className="card-hover-effect border-indigo-100 dark:border-indigo-950/70 shadow-xs relative overflow-hidden group">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-600" />
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-slate-900" />
               <CardContent className="p-4">
                 <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                   Headcount
@@ -598,8 +598,8 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="card-hover-effect border-emerald-100 dark:border-emerald-950/70 shadow-xs relative overflow-hidden group">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500" />
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-emerald-600" />
               <CardContent className="p-4">
                 <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                   Present Today
@@ -611,8 +611,8 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="card-hover-effect border-amber-100 dark:border-amber-950/70 shadow-xs relative overflow-hidden group">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500" />
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-amber-500" />
               <CardContent className="p-4">
                 <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                   Late Arrivals
@@ -624,29 +624,29 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="card-hover-effect border-purple-100 dark:border-purple-950/70 shadow-xs relative overflow-hidden group">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-indigo-500" />
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-slate-700" />
               <CardContent className="p-4">
                 <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                   On Leave
                 </span>
-                <div className="text-3xl font-extrabold mt-1 text-indigo-600 dark:text-indigo-400">
+                <div className="text-3xl font-extrabold mt-1 text-slate-900 dark:text-white">
                   {onLeaveToday}
                 </div>
                 <p className="text-[10px] text-slate-400 mt-0.5">Approved leaves</p>
               </CardContent>
             </Card>
 
-            <Card className="card-hover-effect border-amber-200 dark:border-amber-900/60 bg-amber-50/30 dark:bg-amber-950/20 shadow-xs relative overflow-hidden group">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-rose-500" />
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden group">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-rose-500" />
               <CardContent className="p-4">
-                <span className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                <span className="text-[11px] font-semibold text-rose-700 dark:text-rose-400 uppercase tracking-wider">
                   Pending Actions
                 </span>
-                <div className="text-3xl font-extrabold mt-1 text-amber-800 dark:text-amber-300">
+                <div className="text-3xl font-extrabold mt-1 text-rose-800 dark:text-rose-300">
                   {pendingLeaves + pendingCorrections}
                 </div>
-                <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">
+                <p className="text-[10px] text-rose-600 dark:text-rose-400 mt-0.5">
                   {pendingLeaves} leaves · {pendingCorrections} corrections
                 </p>
               </CardContent>
@@ -655,19 +655,19 @@ export default function DashboardPage() {
 
           {/* HR Visual Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="card-hover-effect">
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-sm font-semibold flex items-center space-x-2">
-                      <TrendingUp className="h-4 w-4 text-indigo-600" />
+                    <CardTitle className="text-sm font-bold flex items-center space-x-2 text-slate-900 dark:text-white">
+                      <TrendingUp className="h-4 w-4 text-slate-900 dark:text-white" />
                       <span>7-Day Attendance Rate Curve</span>
                     </CardTitle>
                     <CardDescription className="text-xs">
                       Workforce punctuality trend and presence rate
                     </CardDescription>
                   </div>
-                  <Badge variant="outline" className="text-[10px] text-indigo-600 border-indigo-200">
+                  <Badge variant="outline" className="text-[10px] text-slate-800 border-slate-300 font-semibold">
                     Live
                   </Badge>
                 </div>
@@ -677,19 +677,19 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="card-hover-effect">
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-sm font-semibold flex items-center space-x-2">
-                      <Building className="h-4 w-4 text-purple-600" />
+                    <CardTitle className="text-sm font-bold flex items-center space-x-2 text-slate-900 dark:text-white">
+                      <Building className="h-4 w-4 text-slate-900 dark:text-white" />
                       <span>Staff Distribution by Department</span>
                     </CardTitle>
                     <CardDescription className="text-xs">
                       Headcount balance across organization units
                     </CardDescription>
                   </div>
-                  <Badge variant="outline" className="text-[10px] text-purple-600 border-purple-200">
+                  <Badge variant="outline" className="text-[10px] text-slate-800 border-slate-300 font-semibold">
                     {state.departments.length} Units
                   </Badge>
                 </div>
@@ -702,11 +702,11 @@ export default function DashboardPage() {
 
           {/* Pending Approvals quick table & Top late-comers */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="card-hover-effect">
+            <Card className="card-hover-effect border-slate-200 dark:border-slate-800">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-semibold">Pending Leave Requests</CardTitle>
-                  <Link href="/leave" className="text-xs text-indigo-600 hover:underline font-medium">
+                  <CardTitle className="text-sm font-bold text-slate-900 dark:text-white">Pending Leave Requests</CardTitle>
+                  <Link href="/leave" className="text-xs text-slate-900 dark:text-white hover:underline font-bold">
                     Open Inbox →
                   </Link>
                 </div>
@@ -786,11 +786,11 @@ export default function DashboardPage() {
 
           {/* Section 8 Bonus: Attrition Risk Score & Absence Anomaly Flags */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-            <Card className="border-indigo-100 dark:border-indigo-900/60 shadow-xs">
+            <Card className="border-slate-200 dark:border-slate-800 shadow-xs">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4 text-indigo-600" />
+                    <TrendingUp className="h-4 w-4 text-slate-900 dark:text-slate-100" />
                     <span>Workforce Attrition Risk Index (Bonus)</span>
                   </CardTitle>
                   <Badge variant="outline" className="text-[10px]">
@@ -899,11 +899,11 @@ export default function DashboardPage() {
         <div className="space-y-6">
           {/* Quick Check-in & Hours Bar */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="card-hover-effect md:col-span-2 border-indigo-200 dark:border-indigo-900/60 bg-gradient-to-br from-indigo-50/50 via-white to-white dark:from-indigo-950/30 dark:via-slate-900 dark:to-slate-900">
+            <Card className="card-hover-effect md:col-span-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base flex items-center space-x-2">
-                    <Clock className="h-5 w-5 text-indigo-600" />
+                  <CardTitle className="text-base font-bold flex items-center space-x-2 text-slate-900 dark:text-white">
+                    <Clock className="h-5 w-5 text-slate-900 dark:text-white" />
                     <span>Today's Attendance Status</span>
                   </CardTitle>
                   <Badge variant={myAttendanceToday ? "success" : "secondary"} className="uppercase font-mono text-[10px]">
@@ -915,7 +915,7 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-2">
-                <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 shadow-xs">
+                <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-2xs">
                   <div>
                     <div className="text-xs text-slate-500 font-medium">Check-in Time</div>
                     <div className="text-xl font-extrabold text-slate-900 dark:text-white">
@@ -937,7 +937,7 @@ export default function DashboardPage() {
 
                   <div className="flex items-center space-x-2">
                     <Link href="/attendance/checkin">
-                      <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs shadow-xs">
+                      <Button className="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs shadow-xs">
                         Open Biometric Scanner
                       </Button>
                     </Link>
@@ -951,7 +951,7 @@ export default function DashboardPage() {
                     <span className="font-semibold text-emerald-600 dark:text-emerald-400">32.5 / 40 hrs</span>
                   </div>
                   <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden p-0.5">
-                    <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full" style={{ width: "81%" }} />
+                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: "81%" }} />
                   </div>
                 </div>
               </CardContent>
@@ -1005,7 +1005,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-sm font-semibold flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4 text-indigo-600" />
+                    <TrendingUp className="h-4 w-4 text-slate-900 dark:text-slate-100" />
                     <span>My 7-Day Attendance Rate</span>
                   </CardTitle>
                   <CardDescription className="text-xs">
@@ -1028,7 +1028,7 @@ export default function DashboardPage() {
               <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
                 My Leave Balances (Yearly Quota)
               </h3>
-              <Link href="/leave" className="text-xs text-indigo-600 hover:underline font-medium">
+              <Link href="/leave" className="text-xs text-slate-900 hover:underline dark:text-slate-100 font-semibold">
                 Apply for Leave →
               </Link>
             </div>

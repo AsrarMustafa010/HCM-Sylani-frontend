@@ -150,7 +150,7 @@ export default function LeavePage() {
               setSelectedTypeId(state.leaveTypes[0]?.id || "");
               setApplyModalOpen(true);
             }}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs"
+            className="bg-slate-900 hover:bg-slate-800 text-white text-xs"
           >
             <Plus className="h-3.5 w-3.5 mr-1.5" />
             Apply For Leave
@@ -160,9 +160,9 @@ export default function LeavePage() {
 
       {/* SMART LEAVE NATURAL LANGUAGE BAR (Hero Section 4 Requirement) */}
       {isEmployee && (
-        <Card className="border-indigo-200 dark:border-indigo-900/60 bg-gradient-to-r from-indigo-50/60 via-purple-50/40 to-white dark:from-indigo-950/40 dark:via-purple-950/20 dark:to-slate-900 shadow-sm">
+        <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
           <CardContent className="p-4">
-            <div className="flex items-center space-x-2 mb-2 text-xs font-semibold text-indigo-900 dark:text-indigo-300">
+            <div className="flex items-center space-x-2 mb-2 text-xs font-semibold text-slate-900 dark:text-slate-100">
               <Sparkles className="h-4 w-4 text-amber-500 animate-spin" />
               <span>Smart Leave: Type your request in plain English or Roman Urdu</span>
             </div>
@@ -177,7 +177,7 @@ export default function LeavePage() {
               <Button
                 type="submit"
                 disabled={!smartPrompt.trim() || isSmartLoading}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs shrink-0"
+                className="bg-slate-900 hover:bg-slate-800 text-white text-xs shrink-0"
               >
                 {isSmartLoading ? "Parsing..." : "AI Auto-Fill Form"}
                 <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
@@ -203,7 +203,7 @@ export default function LeavePage() {
                   <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">
                     {b.leave_type_name}
                   </div>
-                  <div className="text-2xl font-bold mt-1 text-indigo-600 dark:text-indigo-400">
+                  <div className="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">
                     {b.remaining === 999 ? "∞" : b.remaining}{" "}
                     <span className="text-xs font-normal text-slate-400">days left</span>
                   </div>
@@ -256,7 +256,7 @@ export default function LeavePage() {
                     <td className="p-3.5 font-medium text-slate-900 dark:text-white">
                       {leave.employee_name}
                     </td>
-                    <td className="p-3.5 font-semibold text-indigo-600 dark:text-indigo-400">
+                    <td className="p-3.5 font-semibold text-slate-900 dark:text-slate-100">
                       {leave.leave_type_name}
                     </td>
                     <td className="p-3.5 text-slate-600 dark:text-slate-300">
@@ -266,7 +266,7 @@ export default function LeavePage() {
                     <td className="p-3.5 max-w-xs text-slate-500">
                       <div>{leave.reason}</div>
                       {leave.reviewer_comment && (
-                        <div className="text-[10px] text-indigo-600 dark:text-indigo-400 mt-0.5">
+                        <div className="text-[10px] text-slate-900 dark:text-slate-100 mt-0.5">
                           HR Comment: {leave.reviewer_comment}
                         </div>
                       )}
@@ -396,7 +396,7 @@ export default function LeavePage() {
             />
           </div>
 
-          <Button type="submit" className="w-full h-10 font-semibold bg-indigo-600 hover:bg-indigo-700">
+          <Button type="submit" className="w-full h-10 font-semibold bg-slate-900 hover:bg-slate-800 text-white">
             Submit Leave Application
           </Button>
         </form>

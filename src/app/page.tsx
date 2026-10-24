@@ -21,9 +21,9 @@ export default function HomePage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950">
       <div className="flex flex-col items-center space-y-4">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" />
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-900 border-t-transparent dark:border-white" />
         <p className="text-sm font-medium text-slate-500">Loading HCM Lite...</p>
       </div>
     </div>

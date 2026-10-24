@@ -77,7 +77,7 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Left Column: Personal Snapshot */}
         <Card className="text-center p-6 flex flex-col items-center">
-          <div className="h-20 w-20 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-3xl font-bold shadow-md shadow-indigo-500/20 mb-3">
+          <div className="h-20 w-20 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-3xl font-bold shadow-md shadow-indigo-500/20 mb-3">
             {employee ? `${employee.first_name[0]}${employee.last_name[0]}` : "U"}
           </div>
           <h2 className="text-lg font-bold text-slate-900 dark:text-white">
@@ -153,7 +153,7 @@ export default function ProfilePage() {
                   />
                 </div>
 
-                <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                <Button type="submit" className="bg-slate-900 hover:bg-slate-800 text-white">
                   <Save className="h-3.5 w-3.5 mr-1.5" />
                   Save Contact Updates
                 </Button>
@@ -165,7 +165,7 @@ export default function ProfilePage() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm flex items-center space-x-2">
-                  <CreditCard className="h-4 w-4 text-indigo-500" />
+                  <CreditCard className="h-4 w-4 text-slate-700 dark:text-slate-300" />
                   <span>My Compensation Structure</span>
                 </CardTitle>
                 <CardDescription>

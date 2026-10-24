@@ -13,7 +13,7 @@ interface DepartmentDonutChartProps {
   data: { name: string; count: number }[];
 }
 
-const COLORS = ["#4f46e5", "#06b6d4", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6"];
+const COLORS = ["#0f172a", "#10b981", "#f59e0b", "#8b5cf6", "#06b6d4", "#ec4899"];
 
 export function DepartmentDonutChart({ data }: DepartmentDonutChartProps) {
   const [mounted, setMounted] = useState(false);

@@ -68,7 +68,7 @@ export default function PayslipsPage() {
             <Button
               size="sm"
               onClick={handlePrint}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs"
+              className="bg-slate-900 hover:bg-slate-800 text-white text-xs"
             >
               <Printer className="h-3.5 w-3.5 mr-1.5" />
               Print / Save PDF
@@ -93,7 +93,7 @@ export default function PayslipsPage() {
                   onClick={() => setSelectedSlip(slip)}
                   className={`p-3.5 rounded-xl border transition cursor-pointer text-xs ${
                     isSelected
-                      ? "border-indigo-600 bg-indigo-50/60 dark:bg-indigo-950/40 shadow-xs"
+                      ? "border-slate-900 bg-slate-100 dark:bg-slate-800 shadow-xs"
                       : "border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40"
                   }`}
                 >
@@ -142,7 +142,7 @@ export default function PayslipsPage() {
               <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-xl bg-slate-900 text-white flex items-center justify-center">
                       <Building className="h-5 w-5" />
                     </div>
                     <div>
@@ -179,7 +179,7 @@ export default function PayslipsPage() {
                     <span className="text-slate-400 text-[10px] uppercase font-semibold">
                       Employee Code
                     </span>
-                    <div className="font-mono font-semibold text-indigo-600 mt-0.5">
+                    <div className="font-mono font-semibold text-slate-900 dark:text-slate-100 mt-0.5">
                       {selectedSlip.employee_code}
                     </div>
                   </div>
@@ -203,7 +203,7 @@ export default function PayslipsPage() {
               </div>
 
               {/* Attendance Breakdown */}
-              <div className="px-6 py-3 bg-indigo-50/40 dark:bg-indigo-950/20 border-b border-slate-200 dark:border-slate-800 text-xs">
+              <div className="px-6 py-3 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 text-xs">
                 <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-600 dark:text-slate-400">
                   <span>
                     Standard Working Days: <strong>{selectedSlip.working_days}</strong>
