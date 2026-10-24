@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "HCM Lite — AI-Assisted Human Capital Management",
   description: "Saylani Hackathon HCM Lite: Role-based Human Capital Management with live AI assistant.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({

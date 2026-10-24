@@ -1,0 +1,17 @@
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hcmGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#4f46e5" />
+      <stop offset="50%" stopColor="#7c3aed" />
+      <stop offset="100%" stopColor="#ec4899" />
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#hcmGrad1)" />
+  <rect x="3" y="3" width="42" height="42" rx="11" fill="white" fillOpacity="0.08" stroke="white" strokeOpacity="0.2" strokeWidth="1" />
+  <path d="M13 14C13 12.8954 13.8954 12 15 12H17C18.1046 12 19 12.8954 19 14V34C19 35.1046 18.1046 36 17 36H15C13.8954 36 13 35.1046 13 34V14Z" fill="white" fillOpacity="0.95" />
+  <path d="M29 14C29 12.8954 29.8954 12 31 12H33C34.1046 12 35 12.8954 35 14V34C35 35.1046 34.1046 36 33 36H31C29.8954 36 29 35.1046 29 34V14Z" fill="white" fillOpacity="0.95" />
+  <path d="M19 22C21.5 22 22.5 26 24 26C25.5 26 26.5 22 29 22V26C26.5 26 25.5 22 24 22C22.5 22 21.5 26 19 26V22Z" fill="#a5b4fc" />
+  <polygon points="24,19 28,24 24,29 20,24" fill="#38bdf8" />
+  <circle cx="24" cy="24" r="1.5" fill="white" />
+  <circle cx="24" cy="13" r="2.5" fill="white" />
+</svg>

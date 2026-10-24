@@ -15,6 +15,7 @@ import { setupCompanyAndAdmin, getStoredState } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { LogoIcon } from "@/components/logo";
 
 export default function SetupPage() {
   const router = useRouter();
@@ -97,9 +98,7 @@ export default function SetupPage() {
       <div className="w-full max-w-2xl">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 mb-3">
-            <Building2 className="h-7 w-7" />
-          </div>
+          <LogoIcon size={64} className="mx-auto mb-3" />
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             Welcome to HCM Lite
           </h1>

@@ -17,6 +17,7 @@ import {
 import { getStoredState, logoutUser, resetToEmptyState } from "@/lib/store";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { LogoIcon } from "@/components/logo";
 import { useRouter } from "next/navigation";
 
 interface NavbarProps {
@@ -74,9 +75,7 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
             <Menu className="h-5 w-5" />
           </Button>
 
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white shadow-sm shadow-indigo-500/25 shrink-0">
-            <Building2 className="h-5 w-5" />
-          </div>
+          <LogoIcon size={38} className="shrink-0" />
           <div>
             <div className="flex items-center space-x-2">
               <span className="font-extrabold text-slate-900 dark:text-white tracking-tight truncate max-w-[120px] sm:max-w-none">

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { LogoIcon } from "@/components/logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -65,9 +66,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-indigo-50/50 via-white to-white dark:from-indigo-950/20 dark:via-slate-950 dark:to-slate-900">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 mb-3">
-            <Building2 className="h-6 w-6" />
-          </div>
+          <LogoIcon size={56} className="mx-auto mb-3" />
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             {companyName}
           </h1>

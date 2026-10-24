@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserRole } from "@/types";
+import { Logo } from "@/components/logo";
 
 interface SidebarProps {
   role: UserRole;
@@ -88,14 +89,9 @@ export function Sidebar({ role, isOpen = false, onClose }: SidebarProps) {
           isOpen && "fixed inset-y-0 left-0 flex shadow-2xl animate-in slide-in-from-left duration-200"
         )}
       >
-        {/* Header / Brand info on Mobile */}
+        {/* Header / Brand info */}
         <div className="p-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-            <div className="h-6 w-6 rounded-lg bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center text-indigo-600">
-              <ShieldCheck className="h-3.5 w-3.5" />
-            </div>
-            <span>Access: {role}</span>
-          </div>
+          <Logo size="sm" subtitle={`Role: ${role.toUpperCase()}`} />
 
           {/* Close button for Mobile Drawer */}
           <button
