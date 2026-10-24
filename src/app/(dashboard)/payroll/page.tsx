@@ -11,17 +11,19 @@ import {
   Building,
   Calendar,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import {
   getStoredState,
-  generateMonthlyPayrollDraft,
-  finalizePayroll,
+  generateMonthlyPayrollDraftAsync,
+  finalizePayrollAsync,
 } from "@/lib/store";
 import { PayrollRun, Payslip } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 
@@ -29,6 +31,7 @@ export default function PayrollPage() {
   const [state, setState] = useState(getStoredState());
   const [selectedMonth, setSelectedMonth] = useState("2026-10");
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
 
   useEffect(() => {
     const handleState = () => setState(getStoredState());
@@ -43,23 +46,28 @@ export default function PayrollPage() {
   const currentRun = state.payrollRuns.find((p) => p.month === selectedMonth);
   const currentSlips = state.payslips.filter((s) => s.month === selectedMonth);
 
-  const handleGenerateDraft = () => {
+  const handleGenerateDraft = async () => {
     setFeedback(null);
-    const res = generateMonthlyPayrollDraft(selectedMonth);
-    if (res.success) {
-      setFeedback({
-        type: "success",
-        text: `Payroll draft for ${selectedMonth} calculated successfully for ${res.payslips?.length} employees!`,
-      });
-    } else {
-      setFeedback({ type: "error", text: res.message || "Failed to generate payroll draft." });
+    setIsGeneratingDraft(true);
+    try {
+      const res = await generateMonthlyPayrollDraftAsync(selectedMonth);
+      if (res.success) {
+        setFeedback({
+          type: "success",
+          text: `Payroll draft for ${selectedMonth} calculated on server for ${res.payslips?.length || state.employees.length} employees!`,
+        });
+      } else {
+        setFeedback({ type: "error", text: res.message || "Failed to generate payroll draft." });
+      }
+    } finally {
+      setIsGeneratingDraft(false);
     }
   };
 
-  const handleFinalize = () => {
+  const handleFinalize = async () => {
     if (!currentRun) return;
     if (confirm(`Are you sure you want to lock and finalize payroll for ${selectedMonth}? Finalized runs cannot be changed!`)) {
-      const res = finalizePayroll(currentRun.id);
+      const res = await finalizePayrollAsync(currentRun.id);
       if (res.success) {
         setFeedback({
           type: "success",
@@ -105,11 +113,20 @@ export default function PayrollPage() {
             <Button
               size="sm"
               onClick={handleGenerateDraft}
-              disabled={currentRun?.status === "finalized"}
+              disabled={currentRun?.status === "finalized" || isGeneratingDraft}
               className="bg-slate-900 hover:bg-slate-800 text-white text-xs"
             >
-              <Play className="h-3.5 w-3.5 mr-1" />
-              {currentRun ? "Recalculate Draft" : "Run Payroll Draft"}
+              {isGeneratingDraft ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />
+                  Calculating...
+                </>
+              ) : (
+                <>
+                  <Play className="h-3.5 w-3.5 mr-1" />
+                  {currentRun ? "Recalculate Draft" : "Run Payroll Draft"}
+                </>
+              )}
             </Button>
           )}
 
@@ -144,8 +161,23 @@ export default function PayrollPage() {
         </div>
       )}
 
+      {/* Totals Summary Cards Skeleton */}
+      {isGeneratingDraft && (
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i}>
+              <CardContent className="p-4 space-y-2">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-7 w-32" />
+                <Skeleton className="h-2.5 w-20" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
       {/* Totals Summary Cards */}
-      {currentRun && (
+      {!isGeneratingDraft && currentRun && (
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">

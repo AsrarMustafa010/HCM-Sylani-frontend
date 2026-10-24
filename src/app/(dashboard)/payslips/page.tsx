@@ -11,7 +11,7 @@ import {
   CreditCard,
   User,
 } from "lucide-react";
-import { getStoredState } from "@/lib/store";
+import { getStoredState, downloadPayslipPdfAsync } from "@/lib/store";
 import { Payslip } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -67,11 +67,25 @@ export default function PayslipsPage() {
           <div className="flex items-center space-x-2">
             <Button
               size="sm"
+              variant="outline"
+              onClick={() =>
+                downloadPayslipPdfAsync(
+                  selectedSlip.id,
+                  `payslip-${selectedSlip.employee_code}-${selectedSlip.month}.pdf`
+                )
+              }
+              className="text-xs"
+            >
+              <Download className="h-3.5 w-3.5 mr-1.5" />
+              Download Official PDF
+            </Button>
+            <Button
+              size="sm"
               onClick={handlePrint}
               className="bg-slate-900 hover:bg-slate-800 text-white text-xs"
             >
               <Printer className="h-3.5 w-3.5 mr-1.5" />
-              Print / Save PDF
+              Print Voucher
             </Button>
           </div>
         )}

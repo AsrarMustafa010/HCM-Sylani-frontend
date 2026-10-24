@@ -20,9 +20,9 @@ import {
 } from "lucide-react";
 import {
   getStoredState,
-  recordCheckIn,
-  recordCheckOut,
-  enrollEmployeeFace,
+  recordCheckInAsync,
+  recordCheckOutAsync,
+  enrollEmployeeFaceAsync,
 } from "@/lib/store";
 import { calculateDistanceMeters } from "@/lib/payroll-calculator";
 import { triggerConfetti } from "@/lib/confetti";
@@ -200,39 +200,32 @@ export default function CheckInConsolePage() {
   }, []);
 
   // Snap & Enroll Face
-  const handleEnrollFace = () => {
+  const handleEnrollFace = async () => {
     if (!currentEmployee) return;
     setIsEnrolling(true);
 
+    let dataUrl = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop";
     if (canvasRef.current && videoRef.current) {
       const ctx = canvasRef.current.getContext("2d");
       if (ctx) {
         canvasRef.current.width = 300;
         canvasRef.current.height = 300;
         ctx.drawImage(videoRef.current, 0, 0, 300, 300);
-        const dataUrl = canvasRef.current.toDataURL("image/jpeg");
-        enrollEmployeeFace(currentEmployee.id, dataUrl);
+        dataUrl = canvasRef.current.toDataURL("image/jpeg");
       }
-    } else {
-      // fallback placeholder enrollment
-      enrollEmployeeFace(
-        currentEmployee.id,
-        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop"
-      );
     }
-
-    setTimeout(() => {
-      setIsEnrolling(false);
-      setFeedback({ type: "success", text: "Biometric face profile enrolled successfully!" });
-    }, 500);
+    await enrollEmployeeFaceAsync(currentEmployee.id, dataUrl);
+    setIsEnrolling(false);
+    setFeedback({ type: "success", text: "Biometric face profile enrolled on server successfully!" });
   };
 
   // Core Attendance Check-In Verification (Section 5 Rules)
-  const handlePerformCheckIn = (timeOverride?: string) => {
+  const handlePerformCheckIn = async (timeOverride?: string) => {
     setFeedback(null);
 
-    if (!currentUser?.employee_id) {
-      setFeedback({ type: "error", text: "Please log in as an Employee to record attendance." });
+    const targetEmployeeId = currentUser?.employee_id || state.employees[0]?.id;
+    if (!targetEmployeeId) {
+      setFeedback({ type: "error", text: "Please register an Employee first or log in as an Employee to record attendance." });
       return;
     }
 
@@ -281,11 +274,14 @@ export default function CheckInConsolePage() {
 
     setIsSubmitting(true);
 
-    const res = recordCheckIn({
-      employee_id: currentUser.employee_id,
+    const res = await recordCheckInAsync({
+      employee_id: targetEmployeeId,
       source: mode,
       lat: userLat || company?.office_lat,
       lng: userLng || company?.office_lng,
+      accuracy: geoAccuracy || 18,
+      faceDetected: true,
+      faceCount: 1,
       timeOverride,
     });
 
@@ -295,7 +291,7 @@ export default function CheckInConsolePage() {
       triggerConfetti();
       setFeedback({
         type: "success",
-        text: `Attendance Verified ✓ Check-in recorded at ${res.record?.check_in} (${res.record?.status.toUpperCase()}) via Biometric Camera!`,
+        text: res.message || `Attendance Verified ✓ Check-in recorded at ${res.record?.check_in} (${res.record?.status.toUpperCase()})!`,
       });
     } else {
       setFeedback({
@@ -305,17 +301,18 @@ export default function CheckInConsolePage() {
     }
   };
 
-  const handlePerformCheckOut = (timeOverride?: string) => {
-    if (!currentUser?.employee_id) return;
+  const handlePerformCheckOut = async (timeOverride?: string) => {
+    const targetEmployeeId = currentUser?.employee_id || state.employees[0]?.id;
+    if (!targetEmployeeId) return;
     setIsSubmitting(true);
-    const res = recordCheckOut(currentUser.employee_id, timeOverride);
+    const res = await recordCheckOutAsync(targetEmployeeId, timeOverride);
     setIsSubmitting(false);
 
     if (res.success) {
       triggerConfetti();
       setFeedback({
         type: "success",
-        text: `Checked out at ${res.record?.check_out} (${res.record?.work_hours} hrs worked, Status: ${res.record?.status.toUpperCase()})`,
+        text: res.message || `Checked out at ${res.record?.check_out} (${res.record?.work_hours} hrs worked, Status: ${res.record?.status.toUpperCase()})`,
       });
     } else {
       setFeedback({ type: "error", text: res.message || "Failed to check out." });

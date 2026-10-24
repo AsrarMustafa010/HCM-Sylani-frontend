@@ -9,14 +9,18 @@ import {
   Download,
   Upload,
   Eye,
+  EyeOff,
   CheckCircle,
   AlertTriangle,
   FileSpreadsheet,
   Building,
+  Loader2,
+  Lock,
 } from "lucide-react";
 import {
   getStoredState,
-  registerEmployee,
+  registerEmployeeAsync,
+  importEmployeesCSVAsync,
   saveState,
 } from "@/lib/store";
 import { Employee } from "@/types";
@@ -25,6 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import Link from "next/link";
 
@@ -45,12 +50,17 @@ export default function EmployeesPage() {
   const [desId, setDesId] = useState("");
   const [basicSalary, setBasicSalary] = useState(80000);
   const [empStatus, setEmpStatus] = useState<Employee["status"]>("active");
+  const [customPassword, setCustomPassword] = useState("");
+  const [showCustomPassword, setShowCustomPassword] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [regError, setRegError] = useState("");
   const [regSuccess, setRegSuccess] = useState<any>(null);
 
   // CSV Dry Run State
   const [isCsvModalOpen, setIsCsvModalOpen] = useState(false);
   const [dryRunRows, setDryRunRows] = useState<any[]>([]);
+  const [csvFile, setCsvFile] = useState<File | string | null>(null);
+  const [csvLoading, setCsvLoading] = useState(false);
 
   useEffect(() => {
     const handleState = () => setState(getStoredState());
@@ -73,7 +83,7 @@ export default function EmployeesPage() {
     return matchesSearch && matchesDept && matchesStatus;
   });
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setRegError("");
 
@@ -86,29 +96,38 @@ export default function EmployeesPage() {
       return;
     }
 
-    const res = registerEmployee({
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      phone,
-      address,
-      department_id: deptId,
-      designation_id: desId || state.designations[0]?.id || "des-se",
-      basic_salary: Number(basicSalary),
-      status: empStatus,
-    });
+    setIsRegistering(true);
+    try {
+      const res = await registerEmployeeAsync({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone,
+        address,
+        department_id: deptId,
+        designation_id: desId || state.designations[0]?.id || "des-se",
+        basic_salary: Number(basicSalary),
+        status: empStatus,
+        password: customPassword ? customPassword.trim() : undefined,
+      });
 
-    if (res.success) {
-      setRegSuccess(res);
-      // Reset form
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhone("");
-      setAddress("");
-      setBasicSalary(80000);
-    } else {
-      setRegError(res.message || "Failed to register employee.");
+      if (res.success) {
+        setRegSuccess(res);
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPhone("");
+        setAddress("");
+        setBasicSalary(80000);
+        setCustomPassword("");
+        setShowCustomPassword(false);
+      } else {
+        setRegError(res.message || "Failed to register employee.");
+      }
+    } catch (err: any) {
+      setRegError(err?.message || "An unexpected error occurred while registering employee.");
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -151,34 +170,43 @@ export default function EmployeesPage() {
     document.body.removeChild(link);
   };
 
-  // CSV Dry Run Simulation (Section 3 Requirement)
-  const handleSimulateCSVDryRun = () => {
-    const mockCsv = [
-      { row: 1, name: "Hamza Tariq", email: "hamza@saylani.com", dept: "Engineering", salary: 90000, valid: true, error: null },
-      { row: 2, name: "Ayesha Khan", email: "ayesha@saylani.com", dept: "Human Resources", salary: 85000, valid: true, error: null },
-      { row: 3, name: "Bilal Ahmed", email: "invalid-email-format", dept: "Engineering", salary: 70000, valid: false, error: "Invalid email syntax" },
-      { row: 4, name: "Sara Malik", email: "sara@saylani.com", dept: "NonExistentDept", salary: 65000, valid: false, error: "Unknown department" },
-      { row: 5, name: "Zubair Shah", email: "zubair@saylani.com", dept: "Marketing", salary: -5000, valid: false, error: "Salary must be > 0" },
-    ];
-    setDryRunRows(mockCsv);
+  // CSV Dry Run (Real Backend Validation + Demo Sample Support)
+  const sampleCsvString = [
+    "fullName,email,phone,department,designation,joiningDate,grossSalary",
+    `Hamza Tariq,hamza.${Date.now().toString().slice(-4)}@saylani.com,+923001112233,${state.departments[0]?.name || "Engineering"},Software Engineer,2026-01-15,135000`,
+    `Ayesha Khan,ayesha.${Date.now().toString().slice(-4)}@saylani.com,+923004445566,${state.departments[0]?.name || "Engineering"},Product Designer,2026-02-01,127500`,
+    "Bilal Ahmed,invalid-email-format,+923007778899,Engineering,QA Engineer,2026-03-01,105000",
+    "Zubair Shah,zubair@saylani.com,+923009990011,Engineering,DevOps,-5000",
+  ].join("\n");
+
+  const handleSimulateCSVDryRun = async () => {
     setIsCsvModalOpen(true);
+    setCsvLoading(true);
+    setCsvFile(sampleCsvString);
+    const res = await importEmployeesCSVAsync(sampleCsvString, true);
+    setCsvLoading(false);
+    if (res.success && res.rows.length > 0) {
+      setDryRunRows(res.rows);
+    }
   };
 
-  const handleCommitValidCsvRows = () => {
-    const validRows = dryRunRows.filter((r) => r.valid);
-    validRows.forEach((r) => {
-      const dept = state.departments.find((d) => d.name === r.dept) || state.departments[0];
-      registerEmployee({
-        first_name: r.name.split(" ")[0],
-        last_name: r.name.split(" ")[1] || "Staff",
-        email: r.email,
-        phone: "+92 300 1234567",
-        address: "Karachi, Pakistan",
-        department_id: dept?.id || "dept-eng",
-        designation_id: state.designations[0]?.id || "des-se",
-        basic_salary: r.salary,
-      });
-    });
+  const handleFileUploadDryRun = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCsvFile(file);
+    setCsvLoading(true);
+    const res = await importEmployeesCSVAsync(file, true);
+    setCsvLoading(false);
+    if (res.success) {
+      setDryRunRows(res.rows);
+    }
+  };
+
+  const handleCommitValidCsvRows = async () => {
+    if (!csvFile) return;
+    setCsvLoading(true);
+    await importEmployeesCSVAsync(csvFile, false);
+    setCsvLoading(false);
     setIsCsvModalOpen(false);
   };
 
@@ -395,6 +423,7 @@ export default function EmployeesPage() {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="Ali"
+                  disabled={isRegistering}
                   required
                 />
               </div>
@@ -404,6 +433,7 @@ export default function EmployeesPage() {
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Raza"
+                  disabled={isRegistering}
                   required
                 />
               </div>
@@ -417,6 +447,7 @@ export default function EmployeesPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="ali.raza@company.com"
+                  disabled={isRegistering}
                   required
                 />
               </div>
@@ -426,6 +457,7 @@ export default function EmployeesPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+92 300 1234567"
+                  disabled={isRegistering}
                   required
                 />
               </div>
@@ -437,6 +469,7 @@ export default function EmployeesPage() {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Gulshan-e-Iqbal, Karachi"
+                disabled={isRegistering}
                 required
               />
             </div>
@@ -447,7 +480,8 @@ export default function EmployeesPage() {
                 <select
                   value={deptId}
                   onChange={(e) => setDeptId(e.target.value)}
-                  className="w-full h-9 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3"
+                  disabled={isRegistering}
+                  className="w-full h-9 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 disabled:opacity-60"
                   required
                 >
                   <option value="">Select Department</option>
@@ -463,7 +497,8 @@ export default function EmployeesPage() {
                 <select
                   value={empStatus}
                   onChange={(e) => setEmpStatus(e.target.value as any)}
-                  className="w-full h-9 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3"
+                  disabled={isRegistering}
+                  className="w-full h-9 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 disabled:opacity-60"
                 >
                   <option value="active">Active</option>
                   <option value="probation">Probation</option>
@@ -481,6 +516,7 @@ export default function EmployeesPage() {
                 type="number"
                 value={basicSalary}
                 onChange={(e) => setBasicSalary(Number(e.target.value))}
+                disabled={isRegistering}
                 required
               />
 
@@ -500,8 +536,72 @@ export default function EmployeesPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-10 font-semibold bg-slate-900 hover:bg-slate-800 text-white">
-              Register & Generate Login
+            {/* Temporary / Login Password with Show Password Toggle */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="font-semibold text-slate-700 dark:text-slate-300 flex items-center space-x-1.5">
+                  <Lock className="h-3.5 w-3.5 text-slate-500" />
+                  <span>Temporary Password (Optional)</span>
+                </label>
+                <span className="text-[10px] text-slate-400">
+                  Leave empty to auto-generate
+                </span>
+              </div>
+              <div className="relative">
+                <Input
+                  type={showCustomPassword ? "text" : "password"}
+                  value={customPassword}
+                  onChange={(e) => setCustomPassword(e.target.value)}
+                  placeholder="e.g. Welcome@2026 or leave blank"
+                  disabled={isRegistering}
+                  className="pr-10 text-xs"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCustomPassword(!showCustomPassword)}
+                  tabIndex={-1}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none p-1 rounded cursor-pointer"
+                  aria-label={showCustomPassword ? "Hide password" : "Show password"}
+                  title={showCustomPassword ? "Hide password" : "Show password"}
+                >
+                  {showCustomPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Clear Loading Feedback Banner */}
+            {isRegistering && (
+              <div className="flex items-center space-x-3 p-3.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200 text-xs animate-pulse">
+                <Loader2 className="h-5 w-5 animate-spin text-blue-600 dark:text-blue-400 shrink-0" />
+                <div className="space-y-0.5">
+                  <div className="font-bold">Registering Employee... Please wait</div>
+                  <div className="text-[11px] text-blue-600 dark:text-blue-300">
+                    Creating profile in MongoDB, setting compensation, and sending welcome email...
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              disabled={isRegistering}
+              className="w-full h-10 font-semibold bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center space-x-2 disabled:opacity-75 disabled:cursor-not-allowed"
+            >
+              {isRegistering ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  <span>Registering Employee... Please wait</span>
+                </>
+              ) : (
+                <>
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  <span>Register & Generate Login</span>
+                </>
+              )}
             </Button>
           </form>
         )}
@@ -516,6 +616,23 @@ export default function EmployeesPage() {
         maxWidth="max-w-2xl"
       >
         <div className="space-y-4 text-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <div>
+              <div className="font-semibold text-slate-800 dark:text-slate-200">
+                Upload Custom CSV File (or use loaded sample)
+              </div>
+              <div className="text-[10px] text-slate-400">
+                Columns: fullName, email, phone, department, designation, joiningDate, grossSalary
+              </div>
+            </div>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileUploadDryRun}
+              className="text-[11px] file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800"
+            />
+          </div>
+
           <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
             <table className="w-full text-left">
               <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-500 border-b">
@@ -529,22 +646,35 @@ export default function EmployeesPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {dryRunRows.map((r) => (
-                  <tr key={r.row} className={r.valid ? "" : "bg-rose-50/50 dark:bg-rose-950/20"}>
-                    <td className="p-2.5 font-mono">{r.row}</td>
-                    <td className="p-2.5 font-medium">{r.name}</td>
-                    <td className="p-2.5">{r.email}</td>
-                    <td className="p-2.5">{r.dept}</td>
-                    <td className="p-2.5">{formatCurrency(r.salary)}</td>
-                    <td className="p-2.5">
-                      {r.valid ? (
-                        <Badge variant="success">Pass (Ready)</Badge>
-                      ) : (
-                        <Badge variant="destructive">{r.error}</Badge>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {csvLoading ? (
+                  Array.from({ length: 4 }).map((_, idx) => (
+                    <tr key={idx} className="animate-pulse">
+                      <td className="p-2.5"><Skeleton className="h-3.5 w-6" /></td>
+                      <td className="p-2.5"><Skeleton className="h-3.5 w-24" /></td>
+                      <td className="p-2.5"><Skeleton className="h-3.5 w-32" /></td>
+                      <td className="p-2.5"><Skeleton className="h-3.5 w-16" /></td>
+                      <td className="p-2.5"><Skeleton className="h-3.5 w-20" /></td>
+                      <td className="p-2.5"><Skeleton className="h-4 w-20 rounded-full" /></td>
+                    </tr>
+                  ))
+                ) : (
+                  dryRunRows.map((r) => (
+                    <tr key={r.row} className={r.valid ? "" : "bg-rose-50/50 dark:bg-rose-950/20"}>
+                      <td className="p-2.5 font-mono">{r.row}</td>
+                      <td className="p-2.5 font-medium">{r.name}</td>
+                      <td className="p-2.5">{r.email}</td>
+                      <td className="p-2.5">{r.dept}</td>
+                      <td className="p-2.5">{formatCurrency(r.salary)}</td>
+                      <td className="p-2.5">
+                        {r.valid ? (
+                          <Badge variant="success">Pass (Ready)</Badge>
+                        ) : (
+                          <Badge variant="destructive">{r.error}</Badge>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

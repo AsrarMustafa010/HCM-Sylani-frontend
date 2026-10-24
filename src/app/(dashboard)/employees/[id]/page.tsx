@@ -18,13 +18,14 @@ import {
 } from "lucide-react";
 import {
   getStoredState,
-  updateEmployeeDetails,
+  updateEmployeeDetailsAsync,
   getEmployeeLeaveBalances,
 } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import Link from "next/link";
 
@@ -56,6 +57,36 @@ export default function Employee360Page() {
     }
   }, [employee]);
 
+  if (!employee && (!state.isInitialized || state.employees.length === 0)) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center space-x-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+          <Skeleton className="h-10 w-10 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-3.5 w-32" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="p-4 space-y-3">
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-3.5 w-full" />
+            <Skeleton className="h-3.5 w-5/6" />
+            <Skeleton className="h-3.5 w-4/6" />
+          </Card>
+          <Card className="p-4 md:col-span-2 space-y-4">
+            <Skeleton className="h-5 w-40" />
+            <div className="grid grid-cols-2 gap-3">
+              <Skeleton className="h-20 w-full rounded-xl" />
+              <Skeleton className="h-20 w-full rounded-xl" />
+            </div>
+            <Skeleton className="h-32 w-full rounded-xl" />
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   if (!employee) {
     return (
       <div className="p-8 text-center text-xs text-slate-500">
@@ -76,11 +107,11 @@ export default function Employee360Page() {
   const isSelf = currentUser?.employee_id === employee.id;
   const canEditSalary = currentUser?.role === "hr" || currentUser?.role === "admin";
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser) return;
 
-    updateEmployeeDetails(
+    await updateEmployeeDetailsAsync(
       employee.id,
       {
         phone,

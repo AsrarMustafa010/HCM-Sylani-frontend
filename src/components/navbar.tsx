@@ -14,7 +14,12 @@ import {
   RefreshCcw,
   Menu,
 } from "lucide-react";
-import { getStoredState, logoutUser, resetToEmptyState } from "@/lib/store";
+import {
+  getStoredState,
+  logoutUser,
+  resetToEmptyStateAsync,
+  markAllNotificationsReadAsync,
+} from "@/lib/store";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { LogoIcon } from "@/components/logo";
@@ -38,8 +43,8 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
     return () => window.removeEventListener("hcm_state_changed", handleStateChange);
   }, []);
 
-  const currentUser = state.currentUser;
-  const companyName = state.companySettings?.company_name || "HCM Lite";
+  const currentUser = mounted ? state.currentUser : null;
+  const companyName = mounted ? (state.companySettings?.company_name || "HCM Lite") : "HCM Lite";
   const unreadNotifications = state.notifications.filter((n) => !n.is_read);
 
   const handleLogout = () => {
@@ -47,9 +52,9 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
     router.push("/login");
   };
 
-  const handleResetForDemo = () => {
+  const handleResetForDemo = async () => {
     if (confirm("Reset everything to empty state for fresh judging demo?")) {
-      resetToEmptyState();
+      await resetToEmptyStateAsync();
       router.push("/setup");
     }
   };
@@ -141,7 +146,10 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Notifications
                   </h4>
-                  <span className="text-[11px] text-slate-900 dark:text-slate-100 font-medium hover:underline cursor-pointer">
+                  <span
+                    onClick={() => markAllNotificationsReadAsync()}
+                    className="text-[11px] text-slate-900 dark:text-slate-100 font-medium hover:underline cursor-pointer"
+                  >
                     Mark all read
                   </span>
                 </div>

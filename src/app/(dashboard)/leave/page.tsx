@@ -15,9 +15,9 @@ import {
 import {
   getStoredState,
   getEmployeeLeaveBalances,
-  applyForLeave,
-  reviewLeaveRequest,
-  parseSmartLeaveText,
+  applyForLeaveAsync,
+  reviewLeaveRequestAsync,
+  parseSmartLeaveTextAsync,
 } from "@/lib/store";
 import { LeaveRequest } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/utils";
 import { triggerConfetti } from "@/lib/confetti";
 
@@ -53,10 +54,12 @@ export default function LeavePage() {
 
   const currentUser = state.currentUser;
   const isEmployee = currentUser?.role === "employee";
+  const canApplyLeave = currentUser?.role === "employee" || currentUser?.role === "hr";
   const canApprove = currentUser?.role === "hr" || currentUser?.role === "admin";
 
-  const balances = currentUser?.employee_id
-    ? getEmployeeLeaveBalances(currentUser.employee_id)
+  const activeEmployeeId = currentUser?.employee_id || state.employees[0]?.id;
+  const balances = activeEmployeeId
+    ? getEmployeeLeaveBalances(activeEmployeeId)
     : [];
 
   const requests = isEmployee
@@ -64,34 +67,37 @@ export default function LeavePage() {
     : state.leaveRequests;
 
   // Smart Leave NLP parser handler
-  const handleSmartLeaveParse = (e: React.FormEvent) => {
+  const handleSmartLeaveParse = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!smartPrompt.trim()) return;
 
     setIsSmartLoading(true);
-    setTimeout(() => {
-      const draft = parseSmartLeaveText(smartPrompt);
-      const matchedType = state.leaveTypes.find(
-        (t) => t.name.toLowerCase() === draft.leave_type.toLowerCase()
-      ) || state.leaveTypes[0];
+    try {
+      const draft = await parseSmartLeaveTextAsync(smartPrompt);
+      const matchedType =
+        state.leaveTypes.find(
+          (t) =>
+            t.name.toLowerCase().includes(draft.leave_type.toLowerCase()) ||
+            draft.leave_type.toLowerCase().includes(t.name.toLowerCase())
+        ) || state.leaveTypes[0];
 
-      setSelectedTypeId(matchedType.id);
+      setSelectedTypeId(matchedType?.id || "");
       setStartDate(draft.start_date);
       setEndDate(draft.end_date);
       setReason(draft.reason);
-
-      setIsSmartLoading(false);
       setApplyModalOpen(true);
-    }, 400);
+    } finally {
+      setIsSmartLoading(false);
+    }
   };
 
-  const handleApply = (e: React.FormEvent) => {
+  const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
     setApplyError("");
     setApplySuccess("");
 
-    if (!currentUser?.employee_id) {
-      setApplyError("You must be logged in as an employee to apply for leave.");
+    if (!activeEmployeeId) {
+      setApplyError("No employee profile found to submit leave for.");
       return;
     }
     if (!selectedTypeId) {
@@ -99,8 +105,8 @@ export default function LeavePage() {
       return;
     }
 
-    const res = applyForLeave({
-      employee_id: currentUser.employee_id,
+    const res = await applyForLeaveAsync({
+      employee_id: activeEmployeeId,
       leave_type_id: selectedTypeId,
       start_date: startDate,
       end_date: endDate,
@@ -113,17 +119,17 @@ export default function LeavePage() {
         setApplyModalOpen(false);
         setApplySuccess("");
         setReason("");
-      }, 1500);
+      }, 1200);
     } else {
       setApplyError(res.message || "Failed to submit leave request.");
     }
   };
 
-  const handleReview = (id: string, decision: "approved" | "rejected") => {
+  const handleReview = async (id: string, decision: "approved" | "rejected") => {
     const comment = prompt(`Enter ${decision} comment for this leave request:`);
     if (comment === null) return;
-    reviewLeaveRequest(id, decision, comment.trim() || "Reviewed by HR");
-    if (decision === "approved") {
+    const res = await reviewLeaveRequestAsync(id, decision, comment.trim() || "Reviewed by HR");
+    if (res.success && decision === "approved") {
       triggerConfetti();
     }
   };
@@ -141,7 +147,7 @@ export default function LeavePage() {
           </p>
         </div>
 
-        {isEmployee && (
+        {canApplyLeave && (
           <Button
             size="sm"
             onClick={() => {
@@ -159,7 +165,7 @@ export default function LeavePage() {
       </div>
 
       {/* SMART LEAVE NATURAL LANGUAGE BAR (Hero Section 4 Requirement) */}
-      {isEmployee && (
+      {canApplyLeave && (
         <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
           <CardContent className="p-4">
             <div className="flex items-center space-x-2 mb-2 text-xs font-semibold text-slate-900 dark:text-slate-100">
@@ -183,6 +189,23 @@ export default function LeavePage() {
                 <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
               </Button>
             </form>
+
+            {isSmartLoading && (
+              <div className="mt-3 p-3 rounded-lg border border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20 space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-spin" />
+                  <span className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+                    AI extracting dates, category, and checking working days...
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <Skeleton className="h-8 w-full" />
+                  <Skeleton className="h-8 w-full" />
+                  <Skeleton className="h-8 w-full" />
+                </div>
+              </div>
+            )}
+
             <p className="text-[10px] text-slate-500 mt-1.5">
               AI automatically detects leave category, computes working dates, pre-fills the form, and checks quota balance.
             </p>
@@ -197,22 +220,34 @@ export default function LeavePage() {
             Your Yearly Leave Allowances & Balances
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {balances.map((b) => (
-              <Card key={b.leave_type_id}>
-                <CardContent className="p-4">
-                  <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">
-                    {b.leave_type_name}
-                  </div>
-                  <div className="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">
-                    {b.remaining === 999 ? "∞" : b.remaining}{" "}
-                    <span className="text-xs font-normal text-slate-400">days left</span>
-                  </div>
-                  <div className="text-[11px] text-slate-400 mt-1">
-                    Used: {b.used} / {b.quota === 0 ? "Unlimited" : b.quota}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {balances.length === 0 ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <Card key={i}>
+                  <CardContent className="p-4 space-y-2">
+                    <Skeleton className="h-3.5 w-24" />
+                    <Skeleton className="h-7 w-16" />
+                    <Skeleton className="h-3 w-28" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              balances.map((b) => (
+                <Card key={b.leave_type_id}>
+                  <CardContent className="p-4">
+                    <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                      {b.leave_type_name}
+                    </div>
+                    <div className="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">
+                      {b.remaining === 999 ? "∞" : b.remaining}{" "}
+                      <span className="text-xs font-normal text-slate-400">days left</span>
+                    </div>
+                    <div className="text-[11px] text-slate-400 mt-1">
+                      Used: {b.used} / {b.quota === 0 ? "Unlimited" : b.quota}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       )}

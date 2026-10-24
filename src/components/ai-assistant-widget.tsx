@@ -13,7 +13,11 @@ import {
   Wrench,
   ChevronDown,
 } from "lucide-react";
-import { getStoredState, queryAIAssistant, parseSmartLeaveText } from "@/lib/store";
+import {
+  getStoredState,
+  queryAIAssistantAsync,
+  parseSmartLeaveTextAsync,
+} from "@/lib/store";
 import { AIMessage } from "@/types";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -51,7 +55,7 @@ export function AIAssistantWidget() {
 
   const currentUser = state.currentUser;
 
-  const handleSend = (textToSend?: string) => {
+  const handleSend = async (textToSend?: string) => {
     const text = textToSend || input;
     if (!text.trim() || loading) return;
 
@@ -66,29 +70,27 @@ export function AIAssistantWidget() {
     setInput("");
     setLoading(true);
 
-    setTimeout(() => {
-      // Smart Leave shortcut detection
+    try {
       const lower = text.toLowerCase();
       if (
         (lower.includes("leave") || lower.includes("chutti") || lower.includes("off")) &&
         (lower.includes("need") || lower.includes("chahiye") || lower.includes("want") || lower.includes("apply"))
       ) {
-        const smartDraft = parseSmartLeaveText(text);
+        const smartDraft = await parseSmartLeaveTextAsync(text);
         const aiMsg: AIMessage = {
           id: "ai-" + Date.now(),
           role: "assistant",
-          content: `I've prepared a Smart Leave pre-filled draft for you:\n\n• **Type:** ${smartDraft.leave_type}\n• **From:** ${smartDraft.start_date}\n• **To:** ${smartDraft.end_date}\n• **Reason:** "${smartDraft.reason}"\n\nWould you like to open the Leave form to confirm?`,
+          content: `I've prepared a Smart Leave pre-filled draft for you:\n\n• **Type:** ${smartDraft.leave_type.toUpperCase()}\n• **From:** ${smartDraft.start_date}\n• **To:** ${smartDraft.end_date}\n• **Reason:** "${smartDraft.reason}"\n\nOpen the Leave page to submit this request directly!`,
           timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           is_ai_generated: true,
-          tool_called: "smart_leave_parser",
+          tool_called: `smart_leave_parser (${smartDraft.aiLayer || "AI"})`,
         };
         setMessages((prev) => [...prev, aiMsg]);
         setLoading(false);
         return;
       }
 
-      // Live tool-calling query
-      const result = queryAIAssistant(text, currentUser);
+      const result = await queryAIAssistantAsync(text, currentUser);
 
       const aiMsg: AIMessage = {
         id: "ai-" + Date.now(),
@@ -100,8 +102,9 @@ export function AIAssistantWidget() {
       };
 
       setMessages((prev) => [...prev, aiMsg]);
+    } finally {
       setLoading(false);
-    }, 600);
+    }
   };
 
   // Quick judge prompts based on user role

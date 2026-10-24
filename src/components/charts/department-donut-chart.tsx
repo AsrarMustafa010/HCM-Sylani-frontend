@@ -13,7 +13,7 @@ interface DepartmentDonutChartProps {
   data: { name: string; count: number }[];
 }
 
-const COLORS = ["#0f172a", "#10b981", "#f59e0b", "#8b5cf6", "#06b6d4", "#ec4899"];
+const COLORS = ["#6366f1", "#10b981", "#f59e0b", "#8b5cf6", "#06b6d4", "#ec4899"];
 
 export function DepartmentDonutChart({ data }: DepartmentDonutChartProps) {
   const [mounted, setMounted] = useState(false);
@@ -35,17 +35,26 @@ export function DepartmentDonutChart({ data }: DepartmentDonutChartProps) {
   const total = chartData.reduce((acc, curr) => acc + curr.count, 0);
 
   return (
-    <div className="h-64 w-full flex flex-col sm:flex-row items-center justify-between">
+    <div className="h-64 w-full flex flex-col sm:flex-row items-center justify-between select-none outline-none">
       <div className="h-full w-full sm:w-1/2 relative flex items-center justify-center">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
+          <PieChart accessibilityLayer={false}>
             <Tooltip
               contentStyle={{
-                backgroundColor: "rgba(15, 23, 42, 0.9)",
+                backgroundColor: "#0f172a",
                 borderRadius: "0.75rem",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                color: "#fff",
+                border: "1px solid rgba(148, 163, 184, 0.25)",
+                color: "#f8fafc",
                 fontSize: "12px",
+                boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.35)",
+              }}
+              labelStyle={{
+                color: "#f8fafc",
+                fontWeight: 700,
+              }}
+              itemStyle={{
+                color: "#f8fafc",
+                fontWeight: 600,
               }}
               formatter={(value: any, name: any) => [`${value} Employees`, name]}
             />
@@ -83,7 +92,7 @@ export function DepartmentDonutChart({ data }: DepartmentDonutChartProps) {
           <div key={item.name} className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <span
-                className="h-2.5 w-2.5 rounded-full"
+                className="h-2.5 w-2.5 rounded-full shrink-0"
                 style={{ backgroundColor: COLORS[idx % COLORS.length] }}
               />
               <span className="text-slate-700 dark:text-slate-300 font-medium truncate max-w-[110px]">

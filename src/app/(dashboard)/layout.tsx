@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getStoredState } from "@/lib/store";
+import { getStoredState, syncFromBackend } from "@/lib/store";
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
 import { AIAssistantWidget } from "@/components/ai-assistant-widget";
@@ -19,16 +19,20 @@ export default function DashboardLayout({
 
   useEffect(() => {
     setMounted(true);
-    const state = getStoredState();
-    if (!state.isInitialized || !state.companySettings) {
-      router.replace("/setup");
-    } else if (!state.currentUser) {
-      router.replace("/login");
-    } else if (state.currentUser.must_change_password) {
-      router.replace("/change-password");
-    } else {
-      setCurrentUser(state.currentUser);
-    }
+    const applyState = (state: ReturnType<typeof getStoredState>) => {
+      if (!state.isInitialized || !state.companySettings) {
+        router.replace("/setup");
+      } else if (!state.currentUser) {
+        router.replace("/login");
+      } else if (state.currentUser.must_change_password) {
+        router.replace("/change-password");
+      } else {
+        setCurrentUser(state.currentUser);
+      }
+    };
+
+    applyState(getStoredState());
+    syncFromBackend().then(applyState);
 
     const handleRejection = (event: PromiseRejectionEvent) => {
       if (

@@ -21,15 +21,16 @@ import {
 } from "lucide-react";
 import {
   getStoredState,
-  generateDashboardSummary,
-  recordCheckIn,
-  recordCheckOut,
+  generateDashboardSummaryAsync,
+  recordCheckInAsync,
+  recordCheckOutAsync,
   getEmployeeLeaveBalances,
   computeEmployeeAnalytics,
 } from "@/lib/store";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { AttendanceTrendChart } from "@/components/charts/attendance-trend-chart";
 import { DepartmentDonutChart } from "@/components/charts/department-donut-chart";
@@ -152,9 +153,9 @@ export default function DashboardPage() {
   });
 
   // AI Dashboard Summary trigger
-  const handleGenerateSummary = () => {
+  const handleGenerateSummary = async () => {
     setIsSummarizing(true);
-    setTimeout(() => {
+    try {
       const metricsJson = {
         headcount: totalHeadcount,
         monthly_payroll_cost: totalMonthlyPayroll,
@@ -164,10 +165,11 @@ export default function DashboardPage() {
         weekly_hours: 32.5,
         late_count_month: lateCount,
       };
-      const bullets = generateDashboardSummary(metricsJson, role);
+      const bullets = await generateDashboardSummaryAsync(metricsJson, role);
       setSummaryBullets(bullets);
+    } finally {
       setIsSummarizing(false);
-    }, 600);
+    }
   };
 
   return (
@@ -225,6 +227,23 @@ export default function DashboardPage() {
           )}
         </div>
       </div>
+
+      {/* AI Summary Loading Skeleton */}
+      {isSummarizing && (
+        <Card className="border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900 shadow-xs">
+          <CardHeader className="pb-2">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="h-4 w-4 text-amber-500 animate-spin" />
+              <Skeleton className="h-4 w-48" />
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Skeleton className="h-3.5 w-full" />
+            <Skeleton className="h-3.5 w-11/12" />
+            <Skeleton className="h-3.5 w-4/5" />
+          </CardContent>
+        </Card>
+      )}
 
       {/* AI Summary Card (Section 4 requirement) */}
       {summaryBullets && (
@@ -298,7 +317,7 @@ export default function DashboardPage() {
                   {formatCurrency(totalMonthlyPayroll)}
                 </div>
                 <div className="flex items-center space-x-1.5 mt-2">
-                  <Badge variant="outline" className="text-[10px] text-emerald-700 border-emerald-200 bg-emerald-50 py-0 font-semibold">
+                  <Badge variant="success" className="text-[10px] py-0 font-semibold">
                     Tax Verified
                   </Badge>
                   <span className="text-[10px] text-slate-400">· Gross active cost</span>
@@ -341,7 +360,7 @@ export default function DashboardPage() {
                   {presentCount + lateCount} <span className="text-base font-normal text-slate-400">/ {totalHeadcount}</span>
                 </div>
                 <div className="flex items-center space-x-1.5 mt-2">
-                  <Badge variant="outline" className="text-[10px] text-amber-700 border-amber-200 bg-amber-50 py-0 font-semibold">
+                  <Badge variant="warning" className="text-[10px] py-0 font-semibold">
                     {lateCount} Late
                   </Badge>
                   <span className="text-[10px] text-slate-400">· {onLeaveToday} on leave</span>
@@ -411,7 +430,7 @@ export default function DashboardPage() {
                       Monthly salary volume with tax withholding simulation
                     </CardDescription>
                   </div>
-                  <Badge variant="outline" className="text-[10px] text-emerald-700 border-emerald-300 bg-emerald-50 font-semibold">
+                  <Badge variant="success" className="text-[10px] font-semibold">
                     PKR Slabs
                   </Badge>
                 </div>

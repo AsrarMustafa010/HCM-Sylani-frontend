@@ -10,7 +10,7 @@ import {
   Shield,
   CheckCircle,
 } from "lucide-react";
-import { getStoredState, saveState, logAudit } from "@/lib/store";
+import { getStoredState, createAnnouncementAsync } from "@/lib/store";
 import { Announcement } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,42 +35,15 @@ export default function AnnouncementsPage() {
   const currentUser = state.currentUser;
   const canPost = currentUser?.role === "admin" || currentUser?.role === "hr";
 
-  const handlePostAnnouncement = (e: React.FormEvent) => {
+  const handlePostAnnouncement = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !content.trim()) return;
 
-    const newAnnouncement: Announcement = {
-      id: "ann-" + Date.now(),
+    await createAnnouncementAsync({
       title,
       content,
       target_role: targetRole,
-      author_name: currentUser?.employee_name || currentUser?.email || "Management",
-      author_role: currentUser?.role || "admin",
-      created_at: new Date().toISOString(),
-    };
-
-    const s = getStoredState();
-    s.announcements.unshift(newAnnouncement);
-
-    // Also push notification for employees
-    s.notifications.unshift({
-      id: "notif-ann-" + Date.now(),
-      user_id: "all",
-      title: "New Company Announcement",
-      message: title,
-      type: "announcement",
-      is_read: false,
-      created_at: new Date().toISOString(),
     });
-
-    saveState(s);
-
-    logAudit(
-      { email: currentUser?.email || "user", role: currentUser?.role || "admin" },
-      "create",
-      "company",
-      `Posted announcement: "${title}"`
-    );
 
     setModalOpen(false);
     setTitle("");

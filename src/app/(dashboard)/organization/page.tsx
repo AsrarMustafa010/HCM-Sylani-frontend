@@ -13,11 +13,17 @@ import {
   Layers,
   Save,
   CheckCircle,
+  Eye,
+  EyeOff,
+  Loader2,
 } from "lucide-react";
 import {
   getStoredState,
   saveState,
-  createHRUser,
+  createHRUserAsync,
+  saveCompanySettingsAsync,
+  createDepartmentAsync,
+  createHolidayAsync,
   logAudit,
 } from "@/lib/store";
 import { Button } from "@/components/ui/button";
@@ -44,6 +50,8 @@ export default function OrganizationPage() {
   const [hrModalOpen, setHrModalOpen] = useState(false);
   const [hrEmail, setHrEmail] = useState("");
   const [hrPassword, setHrPassword] = useState("");
+  const [showHrPassword, setShowHrPassword] = useState(false);
+  const [isCreatingHr, setIsCreatingHr] = useState(false);
   const [hrMsg, setHrMsg] = useState("");
 
   // New Dept modal
@@ -67,75 +75,74 @@ export default function OrganizationPage() {
 
   const isAdmin = state.currentUser?.role === "admin";
 
-  const handleSaveSettings = (e: React.FormEvent) => {
+  const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAdmin) return;
 
-    const s = getStoredState();
-    if (s.companySettings) {
-      s.companySettings.company_name = companyName;
-      s.companySettings.office_start = officeStart;
-      s.companySettings.grace_time_minutes = Number(graceMinutes);
-      s.companySettings.half_day_hours = Number(halfDayHours);
-      s.companySettings.office_lat = Number(officeLat);
-      s.companySettings.office_lng = Number(officeLng);
-      s.companySettings.office_radius_meters = Number(officeRadius);
-      saveState(s);
+    const res = await saveCompanySettingsAsync({
+      company_name: companyName,
+      office_start: officeStart,
+      grace_time_minutes: Number(graceMinutes),
+      half_day_hours: Number(halfDayHours),
+      office_lat: Number(officeLat),
+      office_lng: Number(officeLng),
+      office_radius_meters: Number(officeRadius),
+    });
 
-      logAudit(
-        { email: s.currentUser?.email || "admin", role: "admin" },
-        "update",
-        "company",
-        `Updated company settings: Office start ${officeStart}, Grace ${graceMinutes}m, Geofence radius ${officeRadius}m`
-      );
-
+    if (res.success) {
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3000);
     }
   };
 
-  const handleCreateHR = (e: React.FormEvent) => {
+  const handleCreateHR = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = createHRUser(hrEmail, hrPassword);
-    if (res.success) {
-      setHrModalOpen(false);
-      setHrEmail("");
-      setHrPassword("");
-      setHrMsg("");
-    } else {
-      setHrMsg(res.message || "Failed to create HR login");
+    setHrMsg("");
+    setIsCreatingHr(true);
+    try {
+      const res = await createHRUserAsync(hrEmail, hrPassword);
+      if (res.success) {
+        setHrModalOpen(false);
+        setHrEmail("");
+        setHrPassword("");
+        setShowHrPassword(false);
+        setHrMsg("");
+      } else {
+        setHrMsg(res.message || "Failed to create HR login");
+      }
+    } catch (err: any) {
+      setHrMsg(err?.message || "Failed to create HR login");
+    } finally {
+      setIsCreatingHr(false);
     }
   };
 
-  const handleAddDept = (e: React.FormEvent) => {
+  const handleAddDept = async (e: React.FormEvent) => {
     e.preventDefault();
-    const s = getStoredState();
-    const newDept = {
-      id: "dept-" + Date.now(),
+    const res = await createDepartmentAsync({
       name: deptName,
       code: deptCode.toUpperCase(),
       description: deptDesc,
-    };
-    s.departments.push(newDept);
-    saveState(s);
-    setDeptModalOpen(false);
-    setDeptName("");
-    setDeptCode("");
-    setDeptDesc("");
+    });
+    if (res.success) {
+      setDeptModalOpen(false);
+      setDeptName("");
+      setDeptCode("");
+      setDeptDesc("");
+    }
   };
 
-  const handleAddHoliday = (e: React.FormEvent) => {
+  const handleAddHoliday = async (e: React.FormEvent) => {
     e.preventDefault();
-    const s = getStoredState();
-    s.holidays.push({
-      id: "h-" + Date.now(),
+    const res = await createHolidayAsync({
       name: holidayName,
       date: holidayDate,
     });
-    saveState(s);
-    setHolidayModalOpen(false);
-    setHolidayName("");
-    setHolidayDate("");
+    if (res.success) {
+      setHolidayModalOpen(false);
+      setHolidayName("");
+      setHolidayDate("");
+    }
   };
 
   return (
@@ -509,21 +516,50 @@ export default function OrganizationPage() {
               value={hrEmail}
               onChange={(e) => setHrEmail(e.target.value)}
               placeholder="hr@company.com"
+              disabled={isCreatingHr}
               required
             />
           </div>
           <div>
             <label className="font-semibold text-slate-600">Password</label>
-            <Input
-              type="password"
-              value={hrPassword}
-              onChange={(e) => setHrPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-            />
+            <div className="relative mt-1">
+              <Input
+                type={showHrPassword ? "text" : "password"}
+                value={hrPassword}
+                onChange={(e) => setHrPassword(e.target.value)}
+                placeholder="••••••••"
+                disabled={isCreatingHr}
+                className="pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowHrPassword(!showHrPassword)}
+                tabIndex={-1}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none p-1 cursor-pointer"
+                aria-label={showHrPassword ? "Hide password" : "Show password"}
+              >
+                {showHrPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </div>
-          <Button type="submit" className="w-full">
-            Create HR Account
+          <Button
+            type="submit"
+            disabled={isCreatingHr}
+            className="w-full flex items-center justify-center space-x-2"
+          >
+            {isCreatingHr ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                <span>Creating HR Account...</span>
+              </>
+            ) : (
+              "Create HR Account"
+            )}
           </Button>
         </form>
       </Modal>

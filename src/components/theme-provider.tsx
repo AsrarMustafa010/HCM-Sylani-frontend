@@ -10,35 +10,26 @@ interface ThemeContextType {
 }
 
 const ThemeContext = React.createContext<ThemeContextType>({
-  theme: "system",
+  theme: "light",
   setTheme: () => null,
 });
 
 export function ThemeProvider({
   children,
   defaultTheme = "light",
-  ...props
 }: {
   children: React.ReactNode;
   defaultTheme?: Theme;
-  [key: string]: any;
 }) {
-  const [theme, setThemeState] = React.useState<Theme>("light");
+  const [theme, setThemeState] = React.useState<Theme>(defaultTheme);
 
   React.useEffect(() => {
     try {
       const stored = localStorage.getItem("hcm_theme") as Theme | null;
-      if (stored === "dark") {
-        // Automatically default to the requested clean white theme
-        setThemeState("light");
-        localStorage.setItem("hcm_theme", "light");
-      } else if (stored) {
+      if (stored === "dark" || stored === "light" || stored === "system") {
         setThemeState(stored);
-      } else {
-        setThemeState("light");
-        localStorage.setItem("hcm_theme", "light");
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
   }, []);
@@ -47,8 +38,9 @@ export function ThemeProvider({
     const root = document.documentElement;
     root.classList.remove("light", "dark");
 
-    if (theme === "system" || theme === "light") {
-      root.classList.add("light");
+    if (theme === "system") {
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      root.classList.add(systemDark ? "dark" : "light");
       return;
     }
 
@@ -58,7 +50,7 @@ export function ThemeProvider({
   const setTheme = (newTheme: Theme) => {
     try {
       localStorage.setItem("hcm_theme", newTheme);
-    } catch (e) {
+    } catch {
       // ignore
     }
     setThemeState(newTheme);

@@ -12,6 +12,7 @@ import {
   Legend,
 } from "recharts";
 import { formatCurrency } from "@/lib/utils";
+import { useTheme } from "@/components/theme-provider";
 
 interface PayrollBarChartProps {
   data?: { month: string; gross: number; net: number; tax: number }[];
@@ -27,6 +28,8 @@ const defaultData = [
 
 export function PayrollBarChart({ data = defaultData }: PayrollBarChartProps) {
   const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   useEffect(() => {
     setMounted(true);
@@ -37,40 +40,64 @@ export function PayrollBarChart({ data = defaultData }: PayrollBarChartProps) {
   }
 
   return (
-    <div className="h-64 w-full">
+    <div className="h-64 w-full select-none outline-none">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" opacity={1} vertical={false} />
+        <BarChart
+          data={data}
+          margin={{ top: 10, right: 10, left: -10, bottom: 5 }}
+          accessibilityLayer={false}
+        >
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke={isDark ? "rgba(148, 163, 184, 0.15)" : "#e2e8f0"}
+            vertical={false}
+          />
           <XAxis
             dataKey="month"
             tickLine={false}
             axisLine={false}
-            tick={{ fontSize: 11, fill: "#64748b", fontWeight: 500 }}
+            tick={{ fontSize: 11, fill: isDark ? "#94a3b8" : "#64748b", fontWeight: 500 }}
           />
           <YAxis
             tickLine={false}
             axisLine={false}
-            tick={{ fontSize: 10, fill: "#64748b", fontWeight: 500 }}
+            tick={{ fontSize: 10, fill: isDark ? "#94a3b8" : "#64748b", fontWeight: 500 }}
             tickFormatter={(val) => `Rs.${Math.round(val / 1000)}k`}
           />
           <Tooltip
+            cursor={{ fill: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(15, 23, 42, 0.06)" }}
             contentStyle={{
-              backgroundColor: "rgba(15, 23, 42, 0.95)",
+              backgroundColor: isDark ? "#1e293b" : "#0f172a",
               borderRadius: "0.75rem",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-              color: "#fff",
+              border: "1px solid rgba(148, 163, 184, 0.25)",
+              color: "#f8fafc",
               fontSize: "12px",
+              boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.35)",
             }}
-            formatter={(value: any, name: any) => [formatCurrency(value), name]}
+            labelStyle={{
+              color: "#f8fafc",
+              fontWeight: 700,
+              marginBottom: "4px",
+            }}
+            itemStyle={{
+              color: "#f8fafc",
+              fontWeight: 600,
+              padding: "2px 0",
+            }}
+            formatter={(value: any, name: any) => [formatCurrency(Number(value)), name]}
           />
           <Legend
-            wrapperStyle={{ fontSize: "11px", paddingTop: "8px" }}
+            wrapperStyle={{
+              fontSize: "11px",
+              paddingTop: "8px",
+              color: isDark ? "#e2e8f0" : "#334155",
+            }}
             iconType="circle"
           />
           <Bar
             dataKey="gross"
             name="Gross Payroll"
-            fill="#0f172a"
+            fill={isDark ? "#6366f1" : "#3b82f6"}
             radius={[6, 6, 0, 0]}
             maxBarSize={30}
           />

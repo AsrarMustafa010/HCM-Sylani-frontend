@@ -12,7 +12,7 @@ import {
   Save,
   CheckCircle,
 } from "lucide-react";
-import { getStoredState, updateEmployeeDetails } from "@/lib/store";
+import { getStoredState, updateEmployeeDetailsAsync } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -41,17 +41,17 @@ export default function ProfilePage() {
     }
   }, [employee]);
 
-  const handleUpdate = (e: React.FormEvent) => {
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!employee || !currentUser) return;
 
-    updateEmployeeDetails(
+    await updateEmployeeDetailsAsync(
       employee.id,
       { phone, address },
       currentUser.role
     );
 
-    setSuccessMsg("Profile details updated successfully!");
+    setSuccessMsg("Profile details updated on server successfully!");
     setTimeout(() => setSuccessMsg(""), 3000);
   };
 

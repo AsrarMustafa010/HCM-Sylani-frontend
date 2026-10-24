@@ -14,8 +14,8 @@ import {
 } from "lucide-react";
 import {
   getStoredState,
-  requestCorrection,
-  reviewCorrection,
+  requestCorrectionAsync,
+  reviewCorrectionAsync,
 } from "@/lib/store";
 import { AttendanceRecord, AttendanceCorrection } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
+import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 
 export default function AttendancePage() {
@@ -61,11 +62,11 @@ export default function AttendancePage() {
     return matchesDate && matchesDept;
   });
 
-  const handleRequestCorrection = (e: React.FormEvent) => {
+  const handleRequestCorrection = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser?.employee_id) return;
 
-    requestCorrection({
+    await requestCorrectionAsync({
       employee_id: currentUser.employee_id,
       date: corrDate,
       requested_check_in: corrIn,
@@ -77,10 +78,10 @@ export default function AttendancePage() {
     setCorrReason("");
   };
 
-  const handleReviewCorrection = (id: string, status: "approved" | "rejected") => {
+  const handleReviewCorrection = async (id: string, status: "approved" | "rejected") => {
     const comment = prompt(`Enter ${status} comment for attendance correction:`);
     if (comment === null) return;
-    reviewCorrection(id, status, comment.trim() || "Reviewed by HR");
+    await reviewCorrectionAsync(id, status, comment.trim() || "Reviewed by HR");
   };
 
   const pendingCorrections = state.attendanceCorrections.filter((c) =>
@@ -242,7 +243,21 @@ export default function AttendancePage() {
                       </tr>
                     ))}
 
-                    {filteredAttendance.length === 0 && (
+                    {!state.isInitialized && (
+                      Array.from({ length: 4 }).map((_, i) => (
+                        <tr key={i} className="animate-pulse">
+                          <td className="p-3.5"><Skeleton className="h-4 w-28" /></td>
+                          <td className="p-3.5"><Skeleton className="h-4 w-20" /></td>
+                          <td className="p-3.5"><Skeleton className="h-4 w-16" /></td>
+                          <td className="p-3.5"><Skeleton className="h-4 w-16" /></td>
+                          <td className="p-3.5"><Skeleton className="h-4 w-14" /></td>
+                          <td className="p-3.5"><Skeleton className="h-4 w-16" /></td>
+                          <td className="p-3.5"><Skeleton className="h-5 w-16 rounded-full" /></td>
+                        </tr>
+                      ))
+                    )}
+
+                    {state.isInitialized && filteredAttendance.length === 0 && (
                       <tr>
                         <td colSpan={7} className="p-8 text-center text-slate-400">
                           No attendance records found for {selectedDate}.

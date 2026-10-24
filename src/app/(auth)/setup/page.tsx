@@ -10,8 +10,10 @@ import {
   CheckCircle2,
   ArrowRight,
   Sparkles,
+  Eye,
+  EyeOff,
 } from "lucide-react";
-import { setupCompanyAndAdmin, getStoredState } from "@/lib/store";
+import { setupCompanyAndAdminAsync, getStoredState, syncFromBackend } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -23,6 +25,7 @@ export default function SetupPage() {
   const [companyName, setCompanyName] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
   const [officeStart, setOfficeStart] = useState("09:00");
   const [graceMinutes, setGraceMinutes] = useState(15);
   const [halfDayHours, setHalfDayHours] = useState(5);
@@ -34,16 +37,19 @@ export default function SetupPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const state = getStoredState();
-    if (state.isInitialized && state.currentUser) {
-      router.replace("/dashboard");
-    }
+    syncFromBackend().then((state) => {
+      if (state.isInitialized && state.currentUser) {
+        router.replace("/dashboard");
+      } else if (state.isInitialized) {
+        router.replace("/login");
+      }
+    });
   }, [router]);
 
   const handleFillDemoValues = () => {
     setCompanyName("Saylani Tech Solutions");
     setAdminEmail("admin@saylani.com");
-    setAdminPassword("Admin@123");
+    setAdminPassword("Admin@1234");
     setOfficeStart("09:00");
     setGraceMinutes(15);
     setHalfDayHours(5);
@@ -52,7 +58,7 @@ export default function SetupPage() {
     setOfficeRadius(150);
   };
 
-  const handleSetup = (e: React.FormEvent) => {
+  const handleSetup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -64,15 +70,15 @@ export default function SetupPage() {
       setError("Please enter the Admin Email and Password.");
       return;
     }
-    if (adminPassword.length < 6) {
-      setError("Password must be at least 6 characters long.");
+    if (adminPassword.length < 8) {
+      setError("Password must be at least 8 characters long (with uppercase, lowercase, number, and special character).");
       return;
     }
 
     setLoading(true);
 
     try {
-      const res = setupCompanyAndAdmin({
+      const res = await setupCompanyAndAdminAsync({
         company_name: companyName,
         admin_email: adminEmail,
         admin_password: adminPassword,
@@ -86,6 +92,9 @@ export default function SetupPage() {
 
       if (res.success) {
         router.push("/dashboard");
+      } else {
+        setError(res.error || "Failed to initialize company setup.");
+        setLoading(false);
       }
     } catch (err: any) {
       setError(err?.message || "Failed to initialize company setup.");
@@ -167,13 +176,30 @@ export default function SetupPage() {
                   <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Admin Password
                   </label>
-                  <Input
-                    type="password"
-                    value={adminPassword}
-                    onChange={(e) => setAdminPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showAdminPassword ? "text" : "password"}
+                      value={adminPassword}
+                      onChange={(e) => setAdminPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="pr-10"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowAdminPassword(!showAdminPassword)}
+                      tabIndex={-1}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none p-1 cursor-pointer"
+                      aria-label={showAdminPassword ? "Hide password" : "Show password"}
+                      title={showAdminPassword ? "Hide password" : "Show password"}
+                    >
+                      {showAdminPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
 
