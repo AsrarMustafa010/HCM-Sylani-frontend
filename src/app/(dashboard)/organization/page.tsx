@@ -49,7 +49,8 @@ export default function OrganizationPage() {
   // New HR User modal
   const [hrModalOpen, setHrModalOpen] = useState(false);
   const [hrEmail, setHrEmail] = useState("");
-  const [hrPassword, setHrPassword] = useState("");
+  const [hrPassword, setHrPassword] = useState("Hr@12345");
+  const [hrSuccess, setHrSuccess] = useState<{ email: string; password: string } | null>(null);
   const [showHrPassword, setShowHrPassword] = useState(false);
   const [isCreatingHr, setIsCreatingHr] = useState(false);
   const [hrMsg, setHrMsg] = useState("");
@@ -99,12 +100,13 @@ export default function OrganizationPage() {
     e.preventDefault();
     setHrMsg("");
     setIsCreatingHr(true);
+    const passToUse = hrPassword.trim() || "Hr@12345";
     try {
-      const res = await createHRUserAsync(hrEmail, hrPassword);
+      const res = await createHRUserAsync(hrEmail, passToUse);
       if (res.success) {
-        setHrModalOpen(false);
+        setHrSuccess({ email: hrEmail.toLowerCase().trim(), password: res.tempPassword || passToUse });
         setHrEmail("");
-        setHrPassword("");
+        setHrPassword("Hr@12345");
         setShowHrPassword(false);
         setHrMsg("");
       } else {
@@ -503,65 +505,100 @@ export default function OrganizationPage() {
       {/* Create HR Modal */}
       <Modal
         isOpen={hrModalOpen}
-        onClose={() => setHrModalOpen(false)}
+        onClose={() => {
+          setHrModalOpen(false);
+          setHrSuccess(null);
+        }}
         title="Create HR Account"
         description="Creates an HR role login. HR can register employees, review attendance, and run payroll drafts."
       >
-        <form onSubmit={handleCreateHR} className="space-y-4 text-xs">
-          {hrMsg && <div className="text-rose-600 bg-rose-50 p-2 rounded">{hrMsg}</div>}
-          <div>
-            <label className="font-semibold text-slate-600">HR Email</label>
-            <Input
-              type="email"
-              value={hrEmail}
-              onChange={(e) => setHrEmail(e.target.value)}
-              placeholder="hr@company.com"
-              disabled={isCreatingHr}
-              required
-            />
+        {hrSuccess ? (
+          <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 space-y-3 text-xs">
+            <div className="flex items-center space-x-2 text-emerald-800 dark:text-emerald-300 font-bold text-sm">
+              <CheckCircle className="h-5 w-5" />
+              <span>HR Account Created Successfully!</span>
+            </div>
+            <p className="text-slate-600 dark:text-slate-300">
+              An HR login account has been created and linked to the organization.
+            </p>
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 font-mono text-[11px] space-y-1">
+              <div><strong>Login Email:</strong> {hrSuccess.email}</div>
+              <div><strong>Initial Password:</strong> {hrSuccess.password}</div>
+              <div className="text-amber-600 dark:text-amber-400 text-[10px] mt-1">* HR user will be prompted to change password on first login.</div>
+            </div>
+            <Button
+              className="w-full mt-2"
+              onClick={() => {
+                setHrSuccess(null);
+                setHrModalOpen(false);
+              }}
+            >
+              Done
+            </Button>
           </div>
-          <div>
-            <label className="font-semibold text-slate-600">Password</label>
-            <div className="relative mt-1">
+        ) : (
+          <form onSubmit={handleCreateHR} className="space-y-4 text-xs">
+            {hrMsg && <div className="text-rose-600 bg-rose-50 p-2 rounded">{hrMsg}</div>}
+            <div>
+              <label className="font-semibold text-slate-600 dark:text-slate-400">HR Email</label>
               <Input
-                type={showHrPassword ? "text" : "password"}
-                value={hrPassword}
-                onChange={(e) => setHrPassword(e.target.value)}
-                placeholder="••••••••"
+                type="email"
+                value={hrEmail}
+                onChange={(e) => setHrEmail(e.target.value)}
+                placeholder="hr@company.com"
                 disabled={isCreatingHr}
-                className="pr-10"
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowHrPassword(!showHrPassword)}
-                tabIndex={-1}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none p-1 cursor-pointer"
-                aria-label={showHrPassword ? "Hide password" : "Show password"}
-              >
-                {showHrPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </button>
             </div>
-          </div>
-          <Button
-            type="submit"
-            disabled={isCreatingHr}
-            className="w-full flex items-center justify-center space-x-2"
-          >
-            {isCreatingHr ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                <span>Creating HR Account...</span>
-              </>
-            ) : (
-              "Create HR Account"
-            )}
-          </Button>
-        </form>
+            <div>
+              <div className="flex items-center justify-between">
+                <label className="font-semibold text-slate-600 dark:text-slate-400">Initial Login Password</label>
+                <span className="text-[10px] text-slate-400">Default: Hr@12345</span>
+              </div>
+              <div className="relative mt-1">
+                <Input
+                  type={showHrPassword ? "text" : "password"}
+                  value={hrPassword}
+                  onChange={(e) => setHrPassword(e.target.value)}
+                  placeholder="Hr@12345"
+                  disabled={isCreatingHr}
+                  className="pr-10 font-mono"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowHrPassword(!showHrPassword)}
+                  tabIndex={-1}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none p-1 cursor-pointer"
+                  aria-label={showHrPassword ? "Hide password" : "Show password"}
+                >
+                  {showHrPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
+                HR user logs in using this password on first sign-in and will be prompted to set a new password.
+              </p>
+            </div>
+            <Button
+              type="submit"
+              disabled={isCreatingHr}
+              className="w-full flex items-center justify-center space-x-2"
+            >
+              {isCreatingHr ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  <span>Creating HR Account...</span>
+                </>
+              ) : (
+                "Create HR Account"
+              )}
+            </Button>
+          </form>
+        )}
       </Modal>
 
       {/* Add Dept Modal */}

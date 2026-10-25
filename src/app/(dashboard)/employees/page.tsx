@@ -50,7 +50,7 @@ export default function EmployeesPage() {
   const [desId, setDesId] = useState("");
   const [basicSalary, setBasicSalary] = useState(80000);
   const [empStatus, setEmpStatus] = useState<Employee["status"]>("active");
-  const [customPassword, setCustomPassword] = useState("");
+  const [customPassword, setCustomPassword] = useState("Welcome@123");
   const [showCustomPassword, setShowCustomPassword] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [regError, setRegError] = useState("");
@@ -108,7 +108,7 @@ export default function EmployeesPage() {
         designation_id: desId || state.designations[0]?.id || "des-se",
         basic_salary: Number(basicSalary),
         status: empStatus,
-        password: customPassword ? customPassword.trim() : undefined,
+        password: customPassword && customPassword.trim() ? customPassword.trim() : "Welcome@123",
       });
 
       if (res.success) {
@@ -119,7 +119,7 @@ export default function EmployeesPage() {
         setPhone("");
         setAddress("");
         setBasicSalary(80000);
-        setCustomPassword("");
+        setCustomPassword("Welcome@123");
         setShowCustomPassword(false);
       } else {
         setRegError(res.message || "Failed to register employee.");
@@ -397,8 +397,8 @@ export default function EmployeesPage() {
             </p>
             <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 font-mono text-[11px] space-y-1">
               <div><strong>Login Email:</strong> {regSuccess.loginEmail}</div>
-              <div><strong>Temporary Password:</strong> {regSuccess.tempPassword}</div>
-              <div className="text-amber-600 text-[10px] mt-1">* Employee will be forced to change password on first login.</div>
+              <div><strong>Initial Password:</strong> {regSuccess.tempPassword}</div>
+              <div className="text-amber-600 dark:text-amber-400 text-[10px] mt-1">* Employee will be prompted to change password on first login.</div>
             </div>
             <Button
               className="w-full mt-2"
@@ -536,15 +536,15 @@ export default function EmployeesPage() {
               </div>
             </div>
 
-            {/* Temporary / Login Password with Show Password Toggle */}
+            {/* Login Password with Show Password Toggle */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label className="font-semibold text-slate-700 dark:text-slate-300 flex items-center space-x-1.5">
                   <Lock className="h-3.5 w-3.5 text-slate-500" />
-                  <span>Temporary Password (Optional)</span>
+                  <span>Initial Login Password</span>
                 </label>
                 <span className="text-[10px] text-slate-400">
-                  Leave empty to auto-generate
+                  Default: Welcome@123
                 </span>
               </div>
               <div className="relative">
@@ -552,9 +552,10 @@ export default function EmployeesPage() {
                   type={showCustomPassword ? "text" : "password"}
                   value={customPassword}
                   onChange={(e) => setCustomPassword(e.target.value)}
-                  placeholder="e.g. Welcome@2026 or leave blank"
+                  placeholder="Welcome@123"
                   disabled={isRegistering}
-                  className="pr-10 text-xs"
+                  className="pr-10 text-xs font-mono"
+                  required
                 />
                 <button
                   type="button"
@@ -571,6 +572,9 @@ export default function EmployeesPage() {
                   )}
                 </button>
               </div>
+              <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                Employee logs in using this password on their first sign-in and will be prompted to set a new password.
+              </p>
             </div>
 
             {/* Clear Loading Feedback Banner */}

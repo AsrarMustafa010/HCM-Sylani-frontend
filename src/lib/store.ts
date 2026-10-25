@@ -1054,22 +1054,35 @@ export async function saveCompanySettingsAsync(data: {
 
 export async function createHRUserAsync(
   email: string,
-  password: string,
+  password?: string,
   name: string = "HR Manager"
 ): Promise<{ success: boolean; user?: User; tempPassword?: string; message?: string }> {
   try {
+    const finalPassword = password && password.trim() ? password.trim() : "Hr@12345";
     const res = await apiRequest("/org/users/hr", {
       method: "POST",
       body: JSON.stringify({
         name,
         email: email.trim(),
-        password,
+        password: finalPassword,
+        temporaryPassword: finalPassword,
       }),
     });
     await syncFromBackend();
+    const updatedState = getStoredState();
+    const createdUser = updatedState.users.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase().trim()
+    );
+    const resolvedPassword =
+      res?.temporaryPassword ||
+      res?.data?.temporaryPassword ||
+      res?.tempPassword ||
+      res?.data?.tempPassword ||
+      finalPassword;
     return {
       success: true,
-      tempPassword: res?.tempPassword || res?.data?.tempPassword || password,
+      user: createdUser,
+      tempPassword: resolvedPassword,
     };
   } catch (err: any) {
     return {
@@ -1168,6 +1181,8 @@ export async function registerEmployeeAsync(data: {
     const desig = state.designations.find((d) => d.id === data.designation_id);
     const grossSalary = Math.round(Number(data.basic_salary) * 1.5);
 
+    const finalPassword = (data.password && data.password.trim()) || "Welcome@123";
+
     const res = await apiRequest("/employees", {
       method: "POST",
       body: JSON.stringify({
@@ -1181,8 +1196,8 @@ export async function registerEmployeeAsync(data: {
         employmentStatus: (data.status || "active").toUpperCase(),
         grossSalary,
         basicSalary: Number(data.basic_salary),
-        temporaryPassword: data.password ? data.password.trim() : undefined,
-        password: data.password ? data.password.trim() : undefined,
+        temporaryPassword: finalPassword,
+        password: finalPassword,
       }),
     });
 
@@ -1195,14 +1210,18 @@ export async function registerEmployeeAsync(data: {
           (e) => e.email.toLowerCase() === data.email.toLowerCase().trim()
         );
 
+    const savedPassword =
+      res?.temporaryPassword ||
+      res?.data?.temporaryPassword ||
+      res?.credentials?.tempPassword ||
+      res?.data?.credentials?.tempPassword ||
+      finalPassword;
+
     return {
       success: true,
       employee: emp,
       loginEmail: data.email.toLowerCase().trim(),
-      tempPassword:
-        res?.credentials?.tempPassword ||
-        res?.data?.credentials?.tempPassword ||
-        "Welcome@123",
+      tempPassword: savedPassword,
       emailSent: Boolean(res?.credentials?.emailSent ?? res?.data?.credentials?.emailSent),
     };
   } catch (err: any) {
